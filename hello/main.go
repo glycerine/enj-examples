@@ -5,10 +5,10 @@ import (
 	"math/rand"
 )
 
-var game *enj.Game
+var app *enj.App
 
 type Hello struct {
-	*enj.App
+	*enj.Game
 	Time float32
 }
 
@@ -16,10 +16,10 @@ func (h *Hello) Update(dt float32) {
 	h.Time += dt
 	if h.Time > 0.5 {
 		h.Time = 0
-		game.SetBgColor(byte(rand.Intn(256)), byte(rand.Intn(256)), byte(rand.Intn(256)), 255)
+		app.SetBgColor(byte(rand.Intn(256)), byte(rand.Intn(256)), byte(rand.Intn(256)), 255)
 	}
 }
 
 func main() {
-	game = enj.NewGame(800, 600, false, "example", new(Hello))
+	app = enj.NewApp(800, 600, false, "example", new(Hello))
 }

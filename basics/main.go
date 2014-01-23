@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	game    *enj.Game
+	app     *enj.App
 	time    float32
 	regions []*enj.Region
 	batch   *enj.Batch
@@ -16,20 +16,20 @@ var (
 )
 
 type Basics struct {
-	*enj.App
+	*enj.Game
 }
 
 func (b *Basics) Load() {
-	game.Load.Image("../data/bot.png")
+	app.Load.Image("../data/bot.png")
 }
 
 func (b *Basics) Setup() {
-	texture := game.NewTexture("../data/bot.png", false)
+	texture := app.NewTexture("../data/bot.png", false)
 	texture.SetFilter(webgl.NEAREST, webgl.NEAREST)
 	regions = texture.Split(32, 32)
-	batch = game.NewBatch()
+	batch = app.NewBatch()
 	down = 50
-	game.SetBgColor(50, 80, 110, 255)
+	app.SetBgColor(50, 80, 110, 255)
 }
 
 func (b *Basics) Update(dt float32) {
@@ -56,5 +56,5 @@ func (b *Basics) Mouse(x, y float32, e int) {
 }
 
 func main() {
-	game = enj.NewGame(800, 600, false, "example", new(Basics))
+	app = enj.NewApp(800, 600, false, "example", new(Basics))
 }

@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	game    *enj.Game
+	app     *enj.App
 	region  *enj.Region
 	batch   *enj.Batch
 	bots    []*Sprite
@@ -40,16 +40,16 @@ type Sprite struct {
 }
 
 type Botmark struct {
-	*enj.App
+	*enj.Game
 }
 
 func (b *Botmark) Load() {
-	game.Load.Image("../data/bot.png")
+	app.Load.Image("../data/bot.png")
 }
 
 func (b *Botmark) Setup() {
-	batch = game.NewBatch()
-	region = game.NewTexture("../data/bot.png", false).Region(0, 0, 32, 32)
+	batch = app.NewBatch()
+	region = app.NewTexture("../data/bot.png", false).Region(0, 0, 32, 32)
 }
 
 func (b *Botmark) Update(dt float32) {
@@ -62,9 +62,9 @@ func (b *Botmark) Update(dt float32) {
 	}
 
 	minX := float32(0)
-	maxX := game.Width() - region.Width()
+	maxX := app.Width() - region.Width()
 	minY := float32(0)
-	maxY := game.Height() - region.Height()
+	maxY := app.Height() - region.Height()
 
 	for _, bot := range bots {
 		bot.X += bot.DX * dt
@@ -112,5 +112,5 @@ func (b *Botmark) Mouse(x, y float32, action int) {
 }
 
 func main() {
-	game = enj.NewGame(800, 600, false, "example", new(Botmark))
+	app = enj.NewApp(800, 600, false, "example", new(Botmark))
 }
