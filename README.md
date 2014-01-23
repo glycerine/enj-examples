@@ -27,46 +27,28 @@ Next let's create a main.go file in the 'hello' folder. For now, your app needs 
 ```go
 package main
 
-import ( 
-  "github.com/ajhager/enj"
-  "math/rand"
+import (
+	"github.com/ajhager/enj"
+	"math/rand"
 )
 
 var game *enj.Game
 
 type Hello struct {
-  Red, Green, Blue byte
-}
-
-func (h *Hello) Load() {
-}
-
-func (h *Hello) Setup() {
+	*enj.App
+	Time float32
 }
 
 func (h *Hello) Update(dt float32) {
-}
-
-func (h *Hello) Draw() {
-  game.SetBgColor(h.Red, h.Green, h.Blue, 255)
-}
-
-func (h *Hello) Mouse(x, y float32, action int) {
-  switch action {
-  case enj.MOUSEMOVE:
-  case enj.MOUSEDOWN:
-    h.Red = byte(rand.Intn(256))
-    h.Green = byte(rand.Intn(256))	  
-    h.Blue = byte(rand.Intn(256))
-  case enj.MOUSEUP:
-  }
-}
-
-func (h *Hello) Key(key int, action int) {
+	h.Time += dt
+	if h.Time > 0.5 {
+		h.Time = 0
+		game.SetBgColor(byte(rand.Intn(256)), byte(rand.Intn(256)), byte(rand.Intn(256)), 255)
+	}
 }
 
 func main() {
-  game = enj.NewGame(960, 640, false, "hello", &Hello{30, 60, 90})
+	game = enj.NewGame(800, 600, false, "hello", new(Hello))
 }
 ```
 

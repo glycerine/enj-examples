@@ -39,7 +39,9 @@ type Sprite struct {
 	Image  *enj.Region
 }
 
-type Botmark int
+type Botmark struct {
+	*enj.App
+}
 
 func (b *Botmark) Load() {
 	game.Load.Image("../data/bot.png")
@@ -107,9 +109,6 @@ func (b *Botmark) Mouse(x, y float32, action int) {
 	case enj.MOUSEUP:
 		on = false
 	}
-}
-
-func (b *Botmark) Key(key int, e int) {
 }
 
 func main() {

@@ -8,36 +8,18 @@ import (
 var game *enj.Game
 
 type Hello struct {
-	Red, Green, Blue byte
-}
-
-func (h *Hello) Load() {
-}
-
-func (h *Hello) Setup() {
+	*enj.App
+	Time float32
 }
 
 func (h *Hello) Update(dt float32) {
-}
-
-func (h *Hello) Draw() {
-	game.SetBgColor(h.Red, h.Green, h.Blue, 255)
-}
-
-func (h *Hello) Mouse(x, y float32, action int) {
-	switch action {
-	case enj.MOUSEMOVE:
-	case enj.MOUSEDOWN:
-		h.Red = byte(rand.Intn(256))
-		h.Green = byte(rand.Intn(256))
-		h.Blue = byte(rand.Intn(256))
-	case enj.MOUSEUP:
+	h.Time += dt
+	if h.Time > 0.5 {
+		h.Time = 0
+		game.SetBgColor(byte(rand.Intn(256)), byte(rand.Intn(256)), byte(rand.Intn(256)), 255)
 	}
 }
 
-func (h *Hello) Key(key int, action int) {
-}
-
 func main() {
-	game = enj.NewGame(800, 600, false, "example", &Hello{50, 80, 110})
+	game = enj.NewGame(800, 600, false, "example", new(Hello))
 }

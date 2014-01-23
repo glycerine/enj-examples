@@ -15,7 +15,9 @@ var (
 	down    float32
 )
 
-type Basics int
+type Basics struct {
+	*enj.App
+}
 
 func (b *Basics) Load() {
 	game.Load.Image("../data/bot.png")
@@ -51,10 +53,6 @@ func (b *Basics) Mouse(x, y float32, e int) {
 	case enj.MOUSEUP:
 		down = 50
 	}
-}
-
-func (b *Basics) Key(key int, e int) {
-	println(key)
 }
 
 func main() {
