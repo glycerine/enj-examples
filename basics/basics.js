@@ -209,6 +209,7 @@ var go$newType = function(size, kind, string, name, pkgPath, constructor) {
 		typ.Ptr = go$newType(4, "Ptr", "*" + string, "", "", constructor);
 		typ.Ptr.Struct = typ;
 		typ.init = function(fields) {
+			typ.Ptr.init(typ);
 			typ.Ptr.nil = new constructor();
 			var i;
 			for (i = 0; i < fields.length; i++) {
@@ -232,7 +233,6 @@ var go$newType = function(size, kind, string, name, pkgPath, constructor) {
 				}
 				rt.structType = new go$reflect.structType(rt, new (go$sliceType(go$reflect.structField))(reflectFields));
 			};
-			typ.Ptr.init(typ);
 		};
 		break;
 
@@ -2327,31 +2327,24 @@ go$packages["runtime"] = (function() {
 	var UnlockOSThread = function() {
 		throw go$panic("Native function not implemented: UnlockOSThread");
 	};
-	var GOMAXPROCS = function(n) {
-		throw go$panic("Native function not implemented: GOMAXPROCS");
-	};
-	var NumCPU = function() {
-		throw go$panic("Native function not implemented: NumCPU");
-	};
 	var NumCgoCall = function() {
 		throw go$panic("Native function not implemented: NumCgoCall");
 	};
 	var NumGoroutine = function() {
 		throw go$panic("Native function not implemented: NumGoroutine");
 	};
-	MemProfileRecord.prototype.InUseBytes = function() { return this.go$val.InUseBytes(); };
 	MemProfileRecord.Ptr.prototype.InUseBytes = function() {
 		var r, x, x$1;
 		r = this;
 		return (x = r.AllocBytes, x$1 = r.FreeBytes, new Go$Int64(x.high - x$1.high, x.low - x$1.low));
 	};
-	MemProfileRecord.prototype.InUseObjects = function() { return this.go$val.InUseObjects(); };
+	MemProfileRecord.prototype.InUseBytes = function() { return this.go$val.InUseBytes(); };
 	MemProfileRecord.Ptr.prototype.InUseObjects = function() {
 		var r, x, x$1;
 		r = this;
 		return (x = r.AllocObjects, x$1 = r.FreeObjects, new Go$Int64(x.high - x$1.high, x.low - x$1.low));
 	};
-	MemProfileRecord.prototype.Stack = function() { return this.go$val.Stack(); };
+	MemProfileRecord.prototype.InUseObjects = function() { return this.go$val.InUseObjects(); };
 	MemProfileRecord.Ptr.prototype.Stack = function() {
 		var r, _ref, _i, v, i;
 		r = this;
@@ -2366,10 +2359,10 @@ go$packages["runtime"] = (function() {
 		}
 		return go$subslice(new (go$sliceType(Go$Uintptr))(r.Stack0), 0);
 	};
+	MemProfileRecord.prototype.Stack = function() { return this.go$val.Stack(); };
 	var MemProfile = function(p$1, inuseZero) {
 		throw go$panic("Native function not implemented: MemProfile");
 	};
-	StackRecord.prototype.Stack = function() { return this.go$val.Stack(); };
 	StackRecord.Ptr.prototype.Stack = function() {
 		var r, _ref, _i, v, i;
 		r = this;
@@ -2384,6 +2377,7 @@ go$packages["runtime"] = (function() {
 		}
 		return go$subslice(new (go$sliceType(Go$Uintptr))(r.Stack0), 0);
 	};
+	StackRecord.prototype.Stack = function() { return this.go$val.Stack(); };
 	var ThreadCreateProfile = function(p$1) {
 		throw go$panic("Native function not implemented: ThreadCreateProfile");
 	};
@@ -2405,10 +2399,9 @@ go$packages["runtime"] = (function() {
 	var Stack = function(buf, all) {
 		throw go$panic("Native function not implemented: Stack");
 	};
-	TypeAssertionError.prototype.RuntimeError = function() { return this.go$val.RuntimeError(); };
 	TypeAssertionError.Ptr.prototype.RuntimeError = function() {
 	};
-	TypeAssertionError.prototype.Error = function() { return this.go$val.Error(); };
+	TypeAssertionError.prototype.RuntimeError = function() { return this.go$val.RuntimeError(); };
 	TypeAssertionError.Ptr.prototype.Error = function() {
 		var e, inter;
 		e = this;
@@ -2424,6 +2417,7 @@ go$packages["runtime"] = (function() {
 		}
 		return "interface conversion: " + e.concreteString + " is not " + e.assertedString + ": missing method " + e.missingMethod;
 	};
+	TypeAssertionError.prototype.Error = function() { return this.go$val.Error(); };
 	var newTypeAssertionError = function(ps1, ps2, ps3, pmeth, ret) {
 		var s1, s2, s3, meth;
 		s1 = "", s2 = "", s3 = "", meth = "";
@@ -2505,31 +2499,24 @@ go$packages["runtime"] = (function() {
 	var Gosched = function() {
 		throw go$panic("Native function not implemented: Gosched");
 	};
-	var Goexit = function() {
-		throw go$panic("Native function not implemented: Goexit");
-	};
-	var Caller = function(skip) {
-		throw go$panic("Native function not implemented: Caller");
-	};
 	var Callers = function(skip, pc) {
 		throw go$panic("Native function not implemented: Callers");
 	};
 	var FuncForPC = function(pc) {
 		throw go$panic("Native function not implemented: FuncForPC");
 	};
-	Func.prototype.Name = function() { return this.go$val.Name(); };
 	Func.Ptr.prototype.Name = function() {
 		var f;
 		f = this;
 		return funcname_go(f);
 	};
-	Func.prototype.Entry = function() { return this.go$val.Entry(); };
+	Func.prototype.Name = function() { return this.go$val.Name(); };
 	Func.Ptr.prototype.Entry = function() {
 		var f;
 		f = this;
 		return funcentry_go(f);
 	};
-	Func.prototype.FileLine = function(pc) { return this.go$val.FileLine(pc); };
+	Func.prototype.Entry = function() { return this.go$val.Entry(); };
 	Func.Ptr.prototype.FileLine = function(pc) {
 		var file, line, f, _tuple;
 		file = "";
@@ -2538,6 +2525,7 @@ go$packages["runtime"] = (function() {
 		_tuple = funcline_go(f, pc), file = _tuple[0], line = _tuple[1];
 		return [file, line];
 	};
+	Func.prototype.FileLine = function(pc) { return this.go$val.FileLine(pc); };
 	var funcline_go = function() {
 		throw go$panic("Native function not implemented: funcline_go");
 	};
@@ -2546,12 +2534,6 @@ go$packages["runtime"] = (function() {
 	};
 	var funcentry_go = function() {
 		throw go$panic("Native function not implemented: funcentry_go");
-	};
-	var SetFinalizer = function(x, f) {
-		throw go$panic("Native function not implemented: SetFinalizer");
-	};
-	var getgoroot = function() {
-		throw go$panic("Native function not implemented: getgoroot");
 	};
 	var GOROOT = function() {
 		var s;
@@ -2563,12 +2545,6 @@ go$packages["runtime"] = (function() {
 	};
 	var Version = function() {
 		return "go1.2";
-	};
-	var ReadMemStats = function(m$1) {
-		throw go$panic("Native function not implemented: ReadMemStats");
-	};
-	var GC = function() {
-		throw go$panic("Native function not implemented: GC");
 	};
 	var gc_m_ptr = function(ret) {
 		ret.go$set((go$ptrType(m)).nil);
@@ -3020,6 +2996,32 @@ go$packages["runtime"] = (function() {
 		var _tuple;
 		_tuple = f64toint(f), ret.go$set(_tuple[0]), retok.go$set(_tuple[1]);
 	};
+	var GOMAXPROCS = function(n) {
+			if (n > 1) {
+				go$notSupported("GOMAXPROCS != 1")
+			}
+			return 1;
+		};
+	var NumCPU = function() { return 1; };
+	var Goexit = function() {
+			var err = new Go$Error();
+			err.go$exit = true;
+			throw err;
+		};
+	var Caller = function(skip) {
+			var line = go$getStack()[skip + 3];
+			if (line === undefined) {
+				return [0, "", 0, false];
+			}
+			var parts = line.substring(line.indexOf("(") + 1, line.indexOf(")")).split(":");
+			return [0, parts[0], parseInt(parts[1]), true];
+		};
+	var SetFinalizer = function() {};
+	var getgoroot = function() {
+			return (typeof process !== 'undefined') ? (process.env["GOROOT"] || "") : "/";
+		};
+	var ReadMemStats = function() {};
+	var GC = function() {};
 	go$pkg.Compiler = "gc";
 	go$pkg.GOOS = "darwin";
 	go$pkg.GOARCH = "js";
@@ -3092,33 +3094,10 @@ go$packages["runtime"] = (function() {
 	var etypelink = go$makeNativeArray("Ptr", 0, function() { return (go$ptrType(_type)).nil; });
 	var empty_value = go$makeNativeArray("Uint8", 128, function() { return 0; });
 	var hashload = 0;
-go$throwRuntimeError = function(msg) { throw go$panic(new errorString(msg)) };
-		sizeof_C_MStats = 3712;
-		getgoroot = function() { return (typeof process !== 'undefined') ? (process.env["GOROOT"] || "") : "/"; };
-		Caller = function(skip) {
-			var line = go$getStack()[skip + 3];
-			if (line === undefined) {
-				return [0, "", 0, false];
-			}
-			var parts = line.substring(line.indexOf("(") + 1, line.indexOf(")")).split(":");
-			return [0, parts[0], parseInt(parts[1]), true];
-		};
-		GC = function() {};
-		GOMAXPROCS = function(n) {
-			if (n > 1) {
-				go$notSupported("GOMAXPROCS != 1")
-			}
-			return 1;
-		};
-		Goexit = function() {
-			var err = new Go$Error();
-			err.go$exit = true;
-			throw err;
-		};
-		NumCPU = function() { return 1; };
-		ReadMemStats = function() {};
-		SetFinalizer = function() {};
-	go$pkg.Breakpoint = Breakpoint;
+
+			go$throwRuntimeError = function(msg) { throw go$panic(new errorString(msg)) };
+			sizeof_C_MStats = 3712;
+			go$pkg.Breakpoint = Breakpoint;
 	go$pkg.LockOSThread = LockOSThread;
 	go$pkg.UnlockOSThread = UnlockOSThread;
 	go$pkg.GOMAXPROCS = GOMAXPROCS;
@@ -3165,12 +3144,12 @@ go$packages["errors"] = (function() {
 	var New = function(text) {
 		return new errorString.Ptr(text);
 	};
-	errorString.prototype.Error = function() { return this.go$val.Error(); };
 	errorString.Ptr.prototype.Error = function() {
 		var e;
 		e = this;
 		return e.s;
 	};
+	errorString.prototype.Error = function() { return this.go$val.Error(); };
 	go$pkg.New = New;
 	go$pkg.init = function() {
 	};
@@ -3266,338 +3245,337 @@ go$packages["github.com/ajhager/webgl"] = (function() {
 		}
 		return [new Context.Ptr(gl), null];
 	};
-	Context.prototype.GetContextAttributes = function() { return this.go$val.GetContextAttributes(); };
 	Context.Ptr.prototype.GetContextAttributes = function() {
 		var c, ca;
 		c = this;
 		ca = c.Object.getContextAttributes();
 		return new ContextAttributes.Ptr(!!(ca.alpha), !!(ca.depth), !!(ca.stencil), !!(ca.antialias), !!(ca.premultipliedAlpha), !!(ca.preservedDrawingBuffer));
 	};
-	Context.prototype.ActiveTexture = function(texture) { return this.go$val.ActiveTexture(texture); };
+	Context.prototype.GetContextAttributes = function() { return this.go$val.GetContextAttributes(); };
 	Context.Ptr.prototype.ActiveTexture = function(texture) {
 		var c;
 		c = this;
 		c.Object.activeTexture(texture);
 	};
-	Context.prototype.AttachShader = function(program, shader) { return this.go$val.AttachShader(program, shader); };
+	Context.prototype.ActiveTexture = function(texture) { return this.go$val.ActiveTexture(texture); };
 	Context.Ptr.prototype.AttachShader = function(program, shader) {
 		var c;
 		c = this;
 		c.Object.attachShader(program, shader);
 	};
-	Context.prototype.BindAttribLocation = function(program, index, name) { return this.go$val.BindAttribLocation(program, index, name); };
+	Context.prototype.AttachShader = function(program, shader) { return this.go$val.AttachShader(program, shader); };
 	Context.Ptr.prototype.BindAttribLocation = function(program, index, name) {
 		var c;
 		c = this;
 		c.Object.bindAttribLocation(program, index, go$externalize(name, Go$String));
 	};
-	Context.prototype.BindBuffer = function(target, buffer) { return this.go$val.BindBuffer(target, buffer); };
+	Context.prototype.BindAttribLocation = function(program, index, name) { return this.go$val.BindAttribLocation(program, index, name); };
 	Context.Ptr.prototype.BindBuffer = function(target, buffer) {
 		var c;
 		c = this;
 		c.Object.bindBuffer(target, buffer);
 	};
-	Context.prototype.BindFramebuffer = function(target, framebuffer) { return this.go$val.BindFramebuffer(target, framebuffer); };
+	Context.prototype.BindBuffer = function(target, buffer) { return this.go$val.BindBuffer(target, buffer); };
 	Context.Ptr.prototype.BindFramebuffer = function(target, framebuffer) {
 		var c;
 		c = this;
 		c.Object.bindFramebuffer(target, framebuffer);
 	};
-	Context.prototype.BindRenderbuffer = function(target, renderbuffer) { return this.go$val.BindRenderbuffer(target, renderbuffer); };
+	Context.prototype.BindFramebuffer = function(target, framebuffer) { return this.go$val.BindFramebuffer(target, framebuffer); };
 	Context.Ptr.prototype.BindRenderbuffer = function(target, renderbuffer) {
 		var c;
 		c = this;
 		c.Object.bindRenderbuffer(target, renderbuffer);
 	};
-	Context.prototype.BindTexture = function(target, texture) { return this.go$val.BindTexture(target, texture); };
+	Context.prototype.BindRenderbuffer = function(target, renderbuffer) { return this.go$val.BindRenderbuffer(target, renderbuffer); };
 	Context.Ptr.prototype.BindTexture = function(target, texture) {
 		var c;
 		c = this;
 		c.Object.bindTexture(target, texture);
 	};
-	Context.prototype.BlendColor = function(r, g, b, a) { return this.go$val.BlendColor(r, g, b, a); };
+	Context.prototype.BindTexture = function(target, texture) { return this.go$val.BindTexture(target, texture); };
 	Context.Ptr.prototype.BlendColor = function(r, g, b, a) {
 		var c;
 		c = this;
 		c.Object.blendColor(r, g, b, a);
 	};
-	Context.prototype.BlendEquation = function(mode) { return this.go$val.BlendEquation(mode); };
+	Context.prototype.BlendColor = function(r, g, b, a) { return this.go$val.BlendColor(r, g, b, a); };
 	Context.Ptr.prototype.BlendEquation = function(mode) {
 		var c;
 		c = this;
 		c.Object.blendEquation(mode);
 	};
-	Context.prototype.BlendEquationSeparate = function(modeRGB, modeAlpha) { return this.go$val.BlendEquationSeparate(modeRGB, modeAlpha); };
+	Context.prototype.BlendEquation = function(mode) { return this.go$val.BlendEquation(mode); };
 	Context.Ptr.prototype.BlendEquationSeparate = function(modeRGB, modeAlpha) {
 		var c;
 		c = this;
 		c.Object.blendEquationSeparate(modeRGB, modeAlpha);
 	};
-	Context.prototype.BlendFunc = function(sfactor, dfactor) { return this.go$val.BlendFunc(sfactor, dfactor); };
+	Context.prototype.BlendEquationSeparate = function(modeRGB, modeAlpha) { return this.go$val.BlendEquationSeparate(modeRGB, modeAlpha); };
 	Context.Ptr.prototype.BlendFunc = function(sfactor, dfactor) {
 		var c;
 		c = this;
 		c.Object.blendFunc(sfactor, dfactor);
 	};
-	Context.prototype.BlendFuncSeparate = function(srcRGB, dstRGB, srcAlpha, dstAlpha) { return this.go$val.BlendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha); };
+	Context.prototype.BlendFunc = function(sfactor, dfactor) { return this.go$val.BlendFunc(sfactor, dfactor); };
 	Context.Ptr.prototype.BlendFuncSeparate = function(srcRGB, dstRGB, srcAlpha, dstAlpha) {
 		var c;
 		c = this;
 		c.Object.blendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
 	};
-	Context.prototype.BufferData = function(target, data, usage) { return this.go$val.BufferData(target, data, usage); };
+	Context.prototype.BlendFuncSeparate = function(srcRGB, dstRGB, srcAlpha, dstAlpha) { return this.go$val.BlendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha); };
 	Context.Ptr.prototype.BufferData = function(target, data, usage) {
 		var c;
 		c = this;
 		c.Object.bufferData(target, data, usage);
 	};
-	Context.prototype.BufferSubData = function(target, offset, data) { return this.go$val.BufferSubData(target, offset, data); };
+	Context.prototype.BufferData = function(target, data, usage) { return this.go$val.BufferData(target, data, usage); };
 	Context.Ptr.prototype.BufferSubData = function(target, offset, data) {
 		var c;
 		c = this;
 		c.Object.bufferSubData(target, offset, data);
 	};
-	Context.prototype.CheckFramebufferStatus = function(target) { return this.go$val.CheckFramebufferStatus(target); };
+	Context.prototype.BufferSubData = function(target, offset, data) { return this.go$val.BufferSubData(target, offset, data); };
 	Context.Ptr.prototype.CheckFramebufferStatus = function(target) {
 		var c;
 		c = this;
 		return (go$parseInt(c.Object.checkFramebufferStatus(target)) >> 0);
 	};
-	Context.prototype.Clear = function(flags) { return this.go$val.Clear(flags); };
+	Context.prototype.CheckFramebufferStatus = function(target) { return this.go$val.CheckFramebufferStatus(target); };
 	Context.Ptr.prototype.Clear = function(flags) {
 		var c;
 		c = this;
 		c.Object.clear(flags);
 	};
-	Context.prototype.ClearColor = function(r, g, b, a) { return this.go$val.ClearColor(r, g, b, a); };
+	Context.prototype.Clear = function(flags) { return this.go$val.Clear(flags); };
 	Context.Ptr.prototype.ClearColor = function(r, g, b, a) {
 		var c;
 		c = this;
 		c.Object.clearColor(r, g, b, a);
 	};
-	Context.prototype.ClearDepth = function(depth) { return this.go$val.ClearDepth(depth); };
+	Context.prototype.ClearColor = function(r, g, b, a) { return this.go$val.ClearColor(r, g, b, a); };
 	Context.Ptr.prototype.ClearDepth = function(depth) {
 		var c;
 		c = this;
 		c.Object.clearDepth(depth);
 	};
-	Context.prototype.ClearStencil = function(s) { return this.go$val.ClearStencil(s); };
+	Context.prototype.ClearDepth = function(depth) { return this.go$val.ClearDepth(depth); };
 	Context.Ptr.prototype.ClearStencil = function(s) {
 		var c;
 		c = this;
 		c.Object.clearStencil(s);
 	};
-	Context.prototype.ColorMask = function(r, g, b, a) { return this.go$val.ColorMask(r, g, b, a); };
+	Context.prototype.ClearStencil = function(s) { return this.go$val.ClearStencil(s); };
 	Context.Ptr.prototype.ColorMask = function(r, g, b, a) {
 		var c;
 		c = this;
 		c.Object.colorMask(go$externalize(r, Go$Bool), go$externalize(g, Go$Bool), go$externalize(b, Go$Bool), go$externalize(a, Go$Bool));
 	};
-	Context.prototype.CompileShader = function(shader) { return this.go$val.CompileShader(shader); };
+	Context.prototype.ColorMask = function(r, g, b, a) { return this.go$val.ColorMask(r, g, b, a); };
 	Context.Ptr.prototype.CompileShader = function(shader) {
 		var c;
 		c = this;
 		c.Object.compileShader(shader);
 	};
-	Context.prototype.CopyTexImage2D = function(target, level, internal, x, y, w, h, border) { return this.go$val.CopyTexImage2D(target, level, internal, x, y, w, h, border); };
+	Context.prototype.CompileShader = function(shader) { return this.go$val.CompileShader(shader); };
 	Context.Ptr.prototype.CopyTexImage2D = function(target, level, internal, x, y, w, h, border) {
 		var c;
 		c = this;
 		c.Object.copyTexImage2D(target, level, internal, x, y, w, h, border);
 	};
-	Context.prototype.CopyTexSubImage2D = function(target, level, xoffset, yoffset, x, y, w, h) { return this.go$val.CopyTexSubImage2D(target, level, xoffset, yoffset, x, y, w, h); };
+	Context.prototype.CopyTexImage2D = function(target, level, internal, x, y, w, h, border) { return this.go$val.CopyTexImage2D(target, level, internal, x, y, w, h, border); };
 	Context.Ptr.prototype.CopyTexSubImage2D = function(target, level, xoffset, yoffset, x, y, w, h) {
 		var c;
 		c = this;
 		c.Object.copyTexSubImage2D(target, level, xoffset, yoffset, x, y, w, h);
 	};
-	Context.prototype.CreateBuffer = function() { return this.go$val.CreateBuffer(); };
+	Context.prototype.CopyTexSubImage2D = function(target, level, xoffset, yoffset, x, y, w, h) { return this.go$val.CopyTexSubImage2D(target, level, xoffset, yoffset, x, y, w, h); };
 	Context.Ptr.prototype.CreateBuffer = function() {
 		var c;
 		c = this;
 		return c.Object.createBuffer();
 	};
-	Context.prototype.CreateFramebuffer = function() { return this.go$val.CreateFramebuffer(); };
+	Context.prototype.CreateBuffer = function() { return this.go$val.CreateBuffer(); };
 	Context.Ptr.prototype.CreateFramebuffer = function() {
 		var c;
 		c = this;
 		return c.Object.createFramebuffer();
 	};
-	Context.prototype.CreateProgram = function() { return this.go$val.CreateProgram(); };
+	Context.prototype.CreateFramebuffer = function() { return this.go$val.CreateFramebuffer(); };
 	Context.Ptr.prototype.CreateProgram = function() {
 		var c;
 		c = this;
 		return c.Object.createProgram();
 	};
-	Context.prototype.CreateRenderbuffer = function() { return this.go$val.CreateRenderbuffer(); };
+	Context.prototype.CreateProgram = function() { return this.go$val.CreateProgram(); };
 	Context.Ptr.prototype.CreateRenderbuffer = function() {
 		var c;
 		c = this;
 		return c.Object.createRenderbuffer();
 	};
-	Context.prototype.CreateShader = function(typ) { return this.go$val.CreateShader(typ); };
+	Context.prototype.CreateRenderbuffer = function() { return this.go$val.CreateRenderbuffer(); };
 	Context.Ptr.prototype.CreateShader = function(typ) {
 		var c;
 		c = this;
 		return c.Object.createShader(typ);
 	};
-	Context.prototype.CreateTexture = function() { return this.go$val.CreateTexture(); };
+	Context.prototype.CreateShader = function(typ) { return this.go$val.CreateShader(typ); };
 	Context.Ptr.prototype.CreateTexture = function() {
 		var c;
 		c = this;
 		return c.Object.createTexture();
 	};
-	Context.prototype.CullFace = function(mode) { return this.go$val.CullFace(mode); };
+	Context.prototype.CreateTexture = function() { return this.go$val.CreateTexture(); };
 	Context.Ptr.prototype.CullFace = function(mode) {
 		var c;
 		c = this;
 		c.Object.cullFace(mode);
 	};
-	Context.prototype.DeleteBuffer = function(buffer) { return this.go$val.DeleteBuffer(buffer); };
+	Context.prototype.CullFace = function(mode) { return this.go$val.CullFace(mode); };
 	Context.Ptr.prototype.DeleteBuffer = function(buffer) {
 		var c;
 		c = this;
 		c.Object.deleteBuffer(buffer);
 	};
-	Context.prototype.DeleteFramebuffer = function(framebuffer) { return this.go$val.DeleteFramebuffer(framebuffer); };
+	Context.prototype.DeleteBuffer = function(buffer) { return this.go$val.DeleteBuffer(buffer); };
 	Context.Ptr.prototype.DeleteFramebuffer = function(framebuffer) {
 		var c;
 		c = this;
 		c.Object.deleteFramebuffer(framebuffer);
 	};
-	Context.prototype.DeleteProgram = function(program) { return this.go$val.DeleteProgram(program); };
+	Context.prototype.DeleteFramebuffer = function(framebuffer) { return this.go$val.DeleteFramebuffer(framebuffer); };
 	Context.Ptr.prototype.DeleteProgram = function(program) {
 		var c;
 		c = this;
 		c.Object.deleteProgram(program);
 	};
-	Context.prototype.DeleteRenderbuffer = function(renderbuffer) { return this.go$val.DeleteRenderbuffer(renderbuffer); };
+	Context.prototype.DeleteProgram = function(program) { return this.go$val.DeleteProgram(program); };
 	Context.Ptr.prototype.DeleteRenderbuffer = function(renderbuffer) {
 		var c;
 		c = this;
 		c.Object.deleteRenderbuffer(renderbuffer);
 	};
-	Context.prototype.DeleteShader = function(shader) { return this.go$val.DeleteShader(shader); };
+	Context.prototype.DeleteRenderbuffer = function(renderbuffer) { return this.go$val.DeleteRenderbuffer(renderbuffer); };
 	Context.Ptr.prototype.DeleteShader = function(shader) {
 		var c;
 		c = this;
 		c.Object.deleteShader(shader);
 	};
-	Context.prototype.DeleteTexture = function(texture) { return this.go$val.DeleteTexture(texture); };
+	Context.prototype.DeleteShader = function(shader) { return this.go$val.DeleteShader(shader); };
 	Context.Ptr.prototype.DeleteTexture = function(texture) {
 		var c;
 		c = this;
 		c.Object.deleteTexture(texture);
 	};
-	Context.prototype.DepthFunc = function(fun) { return this.go$val.DepthFunc(fun); };
+	Context.prototype.DeleteTexture = function(texture) { return this.go$val.DeleteTexture(texture); };
 	Context.Ptr.prototype.DepthFunc = function(fun) {
 		var c;
 		c = this;
 		c.Object.depthFunc(fun);
 	};
-	Context.prototype.DepthMask = function(flag) { return this.go$val.DepthMask(flag); };
+	Context.prototype.DepthFunc = function(fun) { return this.go$val.DepthFunc(fun); };
 	Context.Ptr.prototype.DepthMask = function(flag) {
 		var c;
 		c = this;
 		c.Object.depthMask(go$externalize(flag, Go$Bool));
 	};
-	Context.prototype.DepthRange = function(zNear, zFar) { return this.go$val.DepthRange(zNear, zFar); };
+	Context.prototype.DepthMask = function(flag) { return this.go$val.DepthMask(flag); };
 	Context.Ptr.prototype.DepthRange = function(zNear, zFar) {
 		var c;
 		c = this;
 		c.Object.depthRange(zNear, zFar);
 	};
-	Context.prototype.DetachShader = function(program, shader) { return this.go$val.DetachShader(program, shader); };
+	Context.prototype.DepthRange = function(zNear, zFar) { return this.go$val.DepthRange(zNear, zFar); };
 	Context.Ptr.prototype.DetachShader = function(program, shader) {
 		var c;
 		c = this;
 		c.Object.detachShader(program, shader);
 	};
-	Context.prototype.Disable = function(cap) { return this.go$val.Disable(cap); };
+	Context.prototype.DetachShader = function(program, shader) { return this.go$val.DetachShader(program, shader); };
 	Context.Ptr.prototype.Disable = function(cap) {
 		var c;
 		c = this;
 		c.Object.disable(cap);
 	};
-	Context.prototype.DisableVertexAttribArray = function(index) { return this.go$val.DisableVertexAttribArray(index); };
+	Context.prototype.Disable = function(cap) { return this.go$val.Disable(cap); };
 	Context.Ptr.prototype.DisableVertexAttribArray = function(index) {
 		var c;
 		c = this;
 		c.Object.disableVertexAttribArray(index);
 	};
-	Context.prototype.DrawArrays = function(mode, first, count) { return this.go$val.DrawArrays(mode, first, count); };
+	Context.prototype.DisableVertexAttribArray = function(index) { return this.go$val.DisableVertexAttribArray(index); };
 	Context.Ptr.prototype.DrawArrays = function(mode, first, count) {
 		var c;
 		c = this;
 		c.Object.drawArrays(mode, first, count);
 	};
-	Context.prototype.DrawElements = function(mode, count, typ, offset) { return this.go$val.DrawElements(mode, count, typ, offset); };
+	Context.prototype.DrawArrays = function(mode, first, count) { return this.go$val.DrawArrays(mode, first, count); };
 	Context.Ptr.prototype.DrawElements = function(mode, count, typ, offset) {
 		var c;
 		c = this;
 		c.Object.drawElements(mode, count, typ, offset);
 	};
-	Context.prototype.Enable = function(cap) { return this.go$val.Enable(cap); };
+	Context.prototype.DrawElements = function(mode, count, typ, offset) { return this.go$val.DrawElements(mode, count, typ, offset); };
 	Context.Ptr.prototype.Enable = function(cap) {
 		var c;
 		c = this;
 		c.Object.enable(cap);
 	};
-	Context.prototype.EnableVertexAttribArray = function(index) { return this.go$val.EnableVertexAttribArray(index); };
+	Context.prototype.Enable = function(cap) { return this.go$val.Enable(cap); };
 	Context.Ptr.prototype.EnableVertexAttribArray = function(index) {
 		var c;
 		c = this;
 		c.Object.enableVertexAttribArray(index);
 	};
-	Context.prototype.Finish = function() { return this.go$val.Finish(); };
+	Context.prototype.EnableVertexAttribArray = function(index) { return this.go$val.EnableVertexAttribArray(index); };
 	Context.Ptr.prototype.Finish = function() {
 		var c;
 		c = this;
 		c.Object.finish();
 	};
-	Context.prototype.Flush = function() { return this.go$val.Flush(); };
+	Context.prototype.Finish = function() { return this.go$val.Finish(); };
 	Context.Ptr.prototype.Flush = function() {
 		var c;
 		c = this;
 		c.Object.flush();
 	};
-	Context.prototype.FrameBufferRenderBuffer = function(target, attachment, renderbufferTarget, renderbuffer) { return this.go$val.FrameBufferRenderBuffer(target, attachment, renderbufferTarget, renderbuffer); };
+	Context.prototype.Flush = function() { return this.go$val.Flush(); };
 	Context.Ptr.prototype.FrameBufferRenderBuffer = function(target, attachment, renderbufferTarget, renderbuffer) {
 		var c;
 		c = this;
 		c.Object.framebufferRenderBuffer(target, attachment, renderbufferTarget, renderbuffer);
 	};
-	Context.prototype.FramebufferTexture2D = function(target, attachment, textarget, texture, level) { return this.go$val.FramebufferTexture2D(target, attachment, textarget, texture, level); };
+	Context.prototype.FrameBufferRenderBuffer = function(target, attachment, renderbufferTarget, renderbuffer) { return this.go$val.FrameBufferRenderBuffer(target, attachment, renderbufferTarget, renderbuffer); };
 	Context.Ptr.prototype.FramebufferTexture2D = function(target, attachment, textarget, texture, level) {
 		var c;
 		c = this;
 		c.Object.framebufferTexture2D(target, attachment, textarget, texture, level);
 	};
-	Context.prototype.FrontFace = function(mode) { return this.go$val.FrontFace(mode); };
+	Context.prototype.FramebufferTexture2D = function(target, attachment, textarget, texture, level) { return this.go$val.FramebufferTexture2D(target, attachment, textarget, texture, level); };
 	Context.Ptr.prototype.FrontFace = function(mode) {
 		var c;
 		c = this;
 		c.Object.frontFace(mode);
 	};
-	Context.prototype.GenerateMipmap = function(target) { return this.go$val.GenerateMipmap(target); };
+	Context.prototype.FrontFace = function(mode) { return this.go$val.FrontFace(mode); };
 	Context.Ptr.prototype.GenerateMipmap = function(target) {
 		var c;
 		c = this;
 		c.Object.generateMipmap(target);
 	};
-	Context.prototype.GetActiveAttrib = function(program, index) { return this.go$val.GetActiveAttrib(program, index); };
+	Context.prototype.GenerateMipmap = function(target) { return this.go$val.GenerateMipmap(target); };
 	Context.Ptr.prototype.GetActiveAttrib = function(program, index) {
 		var c;
 		c = this;
 		return c.Object.getActiveAttrib(program, index);
 	};
-	Context.prototype.GetActiveUniform = function(program, index) { return this.go$val.GetActiveUniform(program, index); };
+	Context.prototype.GetActiveAttrib = function(program, index) { return this.go$val.GetActiveAttrib(program, index); };
 	Context.Ptr.prototype.GetActiveUniform = function(program, index) {
 		var c;
 		c = this;
 		return c.Object.getActiveUniform(program, index);
 	};
-	Context.prototype.GetAttachedShaders = function(program) { return this.go$val.GetAttachedShaders(program); };
+	Context.prototype.GetActiveUniform = function(program, index) { return this.go$val.GetActiveUniform(program, index); };
 	Context.Ptr.prototype.GetAttachedShaders = function(program) {
 		var c, objs, shaders, i, _slice, _index;
 		c = this;
@@ -3610,91 +3588,91 @@ go$packages["github.com/ajhager/webgl"] = (function() {
 		}
 		return shaders;
 	};
-	Context.prototype.GetAttribLocation = function(program, name) { return this.go$val.GetAttribLocation(program, name); };
+	Context.prototype.GetAttachedShaders = function(program) { return this.go$val.GetAttachedShaders(program); };
 	Context.Ptr.prototype.GetAttribLocation = function(program, name) {
 		var c;
 		c = this;
 		return (go$parseInt(c.Object.getAttribLocation(program, go$externalize(name, Go$String))) >> 0);
 	};
-	Context.prototype.GetBufferParameter = function(target, pname) { return this.go$val.GetBufferParameter(target, pname); };
+	Context.prototype.GetAttribLocation = function(program, name) { return this.go$val.GetAttribLocation(program, name); };
 	Context.Ptr.prototype.GetBufferParameter = function(target, pname) {
 		var c;
 		c = this;
 		return c.Object.getBufferParameter(target, pname);
 	};
-	Context.prototype.GetParameter = function(pname) { return this.go$val.GetParameter(pname); };
+	Context.prototype.GetBufferParameter = function(target, pname) { return this.go$val.GetBufferParameter(target, pname); };
 	Context.Ptr.prototype.GetParameter = function(pname) {
 		var c;
 		c = this;
 		return c.Object.getParameter(pname);
 	};
-	Context.prototype.GetError = function() { return this.go$val.GetError(); };
+	Context.prototype.GetParameter = function(pname) { return this.go$val.GetParameter(pname); };
 	Context.Ptr.prototype.GetError = function() {
 		var c;
 		c = this;
 		return (go$parseInt(c.Object.getError()) >> 0);
 	};
-	Context.prototype.GetExtension = function(name) { return this.go$val.GetExtension(name); };
+	Context.prototype.GetError = function() { return this.go$val.GetError(); };
 	Context.Ptr.prototype.GetExtension = function(name) {
 		var c;
 		c = this;
 		return c.Object.getExtension(go$externalize(name, Go$String));
 	};
-	Context.prototype.GetFramebufferAttachmentParameter = function(target, attachment, pname) { return this.go$val.GetFramebufferAttachmentParameter(target, attachment, pname); };
+	Context.prototype.GetExtension = function(name) { return this.go$val.GetExtension(name); };
 	Context.Ptr.prototype.GetFramebufferAttachmentParameter = function(target, attachment, pname) {
 		var c;
 		c = this;
 		return c.Object.getFramebufferAttachmentParameter(target, attachment, pname);
 	};
-	Context.prototype.GetProgramParameteri = function(program, pname) { return this.go$val.GetProgramParameteri(program, pname); };
+	Context.prototype.GetFramebufferAttachmentParameter = function(target, attachment, pname) { return this.go$val.GetFramebufferAttachmentParameter(target, attachment, pname); };
 	Context.Ptr.prototype.GetProgramParameteri = function(program, pname) {
 		var c;
 		c = this;
 		return (go$parseInt(c.Object.getProgramParameter(program, pname)) >> 0);
 	};
-	Context.prototype.GetProgramParameterb = function(program, pname) { return this.go$val.GetProgramParameterb(program, pname); };
+	Context.prototype.GetProgramParameteri = function(program, pname) { return this.go$val.GetProgramParameteri(program, pname); };
 	Context.Ptr.prototype.GetProgramParameterb = function(program, pname) {
 		var c;
 		c = this;
 		return !!(c.Object.getProgramParameter(program, pname));
 	};
-	Context.prototype.GetProgramInfoLog = function(program) { return this.go$val.GetProgramInfoLog(program); };
+	Context.prototype.GetProgramParameterb = function(program, pname) { return this.go$val.GetProgramParameterb(program, pname); };
 	Context.Ptr.prototype.GetProgramInfoLog = function(program) {
 		var c;
 		c = this;
 		return go$internalize(c.Object.getProgramInfoLog(program), Go$String);
 	};
-	Context.prototype.GetRenderbufferParameter = function(target, pname) { return this.go$val.GetRenderbufferParameter(target, pname); };
+	Context.prototype.GetProgramInfoLog = function(program) { return this.go$val.GetProgramInfoLog(program); };
 	Context.Ptr.prototype.GetRenderbufferParameter = function(target, pname) {
 		var c;
 		c = this;
 		return c.Object.getRenderbufferParameter(target, pname);
 	};
-	Context.prototype.GetShaderParameter = function(shader, pname) { return this.go$val.GetShaderParameter(shader, pname); };
+	Context.prototype.GetRenderbufferParameter = function(target, pname) { return this.go$val.GetRenderbufferParameter(target, pname); };
 	Context.Ptr.prototype.GetShaderParameter = function(shader, pname) {
 		var c;
 		c = this;
 		return c.Object.getShaderParameter(shader, pname);
 	};
-	Context.prototype.GetShaderParameterb = function(shader, pname) { return this.go$val.GetShaderParameterb(shader, pname); };
+	Context.prototype.GetShaderParameter = function(shader, pname) { return this.go$val.GetShaderParameter(shader, pname); };
 	Context.Ptr.prototype.GetShaderParameterb = function(shader, pname) {
 		var c;
 		c = this;
 		return !!(c.Object.getShaderParameter(shader, pname));
 	};
-	Context.prototype.GetShaderInfoLog = function(shader) { return this.go$val.GetShaderInfoLog(shader); };
+	Context.prototype.GetShaderParameterb = function(shader, pname) { return this.go$val.GetShaderParameterb(shader, pname); };
 	Context.Ptr.prototype.GetShaderInfoLog = function(shader) {
 		var c;
 		c = this;
 		return go$internalize(c.Object.getShaderInfoLog(shader), Go$String);
 	};
-	Context.prototype.GetShaderSource = function(shader) { return this.go$val.GetShaderSource(shader); };
+	Context.prototype.GetShaderInfoLog = function(shader) { return this.go$val.GetShaderInfoLog(shader); };
 	Context.Ptr.prototype.GetShaderSource = function(shader) {
 		var c;
 		c = this;
 		return go$internalize(c.Object.getShaderSource(shader), Go$String);
 	};
-	Context.prototype.GetSupportedExtensions = function() { return this.go$val.GetSupportedExtensions(); };
+	Context.prototype.GetShaderSource = function(shader) { return this.go$val.GetShaderSource(shader); };
 	Context.Ptr.prototype.GetSupportedExtensions = function() {
 		var c, ext, extensions, i, _slice, _index;
 		c = this;
@@ -3707,240 +3685,241 @@ go$packages["github.com/ajhager/webgl"] = (function() {
 		}
 		return extensions;
 	};
-	Context.prototype.GetTexParameter = function(target, pname) { return this.go$val.GetTexParameter(target, pname); };
+	Context.prototype.GetSupportedExtensions = function() { return this.go$val.GetSupportedExtensions(); };
 	Context.Ptr.prototype.GetTexParameter = function(target, pname) {
 		var c;
 		c = this;
 		return c.Object.getTexParameter(target, pname);
 	};
-	Context.prototype.GetUniform = function(program, location) { return this.go$val.GetUniform(program, location); };
+	Context.prototype.GetTexParameter = function(target, pname) { return this.go$val.GetTexParameter(target, pname); };
 	Context.Ptr.prototype.GetUniform = function(program, location) {
 		var c;
 		c = this;
 		return c.Object.getUniform(program, location);
 	};
-	Context.prototype.GetUniformLocation = function(program, name) { return this.go$val.GetUniformLocation(program, name); };
+	Context.prototype.GetUniform = function(program, location) { return this.go$val.GetUniform(program, location); };
 	Context.Ptr.prototype.GetUniformLocation = function(program, name) {
 		var c;
 		c = this;
 		return c.Object.getUniformLocation(program, go$externalize(name, Go$String));
 	};
-	Context.prototype.GetVertexAttrib = function(index, pname) { return this.go$val.GetVertexAttrib(index, pname); };
+	Context.prototype.GetUniformLocation = function(program, name) { return this.go$val.GetUniformLocation(program, name); };
 	Context.Ptr.prototype.GetVertexAttrib = function(index, pname) {
 		var c;
 		c = this;
 		return c.Object.getVertexAttrib(index, pname);
 	};
-	Context.prototype.GetVertexAttribOffset = function(index, pname) { return this.go$val.GetVertexAttribOffset(index, pname); };
+	Context.prototype.GetVertexAttrib = function(index, pname) { return this.go$val.GetVertexAttrib(index, pname); };
 	Context.Ptr.prototype.GetVertexAttribOffset = function(index, pname) {
 		var c;
 		c = this;
 		return (go$parseInt(c.Object.getVertexAttribOffset(index, pname)) >> 0);
 	};
-	Context.prototype.IsBuffer = function(buffer) { return this.go$val.IsBuffer(buffer); };
+	Context.prototype.GetVertexAttribOffset = function(index, pname) { return this.go$val.GetVertexAttribOffset(index, pname); };
 	Context.Ptr.prototype.IsBuffer = function(buffer) {
 		var c;
 		c = this;
 		return !!(c.Object.isBuffer(buffer));
 	};
-	Context.prototype.IsContextLost = function() { return this.go$val.IsContextLost(); };
+	Context.prototype.IsBuffer = function(buffer) { return this.go$val.IsBuffer(buffer); };
 	Context.Ptr.prototype.IsContextLost = function() {
 		var c;
 		c = this;
 		return !!(c.Object.isContextLost());
 	};
-	Context.prototype.IsFramebuffer = function(framebuffer) { return this.go$val.IsFramebuffer(framebuffer); };
+	Context.prototype.IsContextLost = function() { return this.go$val.IsContextLost(); };
 	Context.Ptr.prototype.IsFramebuffer = function(framebuffer) {
 		var c;
 		c = this;
 		return !!(c.Object.isFramebuffer(framebuffer));
 	};
-	Context.prototype.IsProgram = function(program) { return this.go$val.IsProgram(program); };
+	Context.prototype.IsFramebuffer = function(framebuffer) { return this.go$val.IsFramebuffer(framebuffer); };
 	Context.Ptr.prototype.IsProgram = function(program) {
 		var c;
 		c = this;
 		return !!(c.Object.isProgram(program));
 	};
-	Context.prototype.IsRenderbuffer = function(renderbuffer) { return this.go$val.IsRenderbuffer(renderbuffer); };
+	Context.prototype.IsProgram = function(program) { return this.go$val.IsProgram(program); };
 	Context.Ptr.prototype.IsRenderbuffer = function(renderbuffer) {
 		var c;
 		c = this;
 		return !!(c.Object.isRenderbuffer(renderbuffer));
 	};
-	Context.prototype.IsShader = function(shader) { return this.go$val.IsShader(shader); };
+	Context.prototype.IsRenderbuffer = function(renderbuffer) { return this.go$val.IsRenderbuffer(renderbuffer); };
 	Context.Ptr.prototype.IsShader = function(shader) {
 		var c;
 		c = this;
 		return !!(c.Object.isShader(shader));
 	};
-	Context.prototype.IsTexture = function(texture) { return this.go$val.IsTexture(texture); };
+	Context.prototype.IsShader = function(shader) { return this.go$val.IsShader(shader); };
 	Context.Ptr.prototype.IsTexture = function(texture) {
 		var c;
 		c = this;
 		return !!(c.Object.isTexture(texture));
 	};
-	Context.prototype.IsEnabled = function(capability) { return this.go$val.IsEnabled(capability); };
+	Context.prototype.IsTexture = function(texture) { return this.go$val.IsTexture(texture); };
 	Context.Ptr.prototype.IsEnabled = function(capability) {
 		var c;
 		c = this;
 		return !!(c.Object.isEnabled(capability));
 	};
-	Context.prototype.LineWidth = function(width) { return this.go$val.LineWidth(width); };
+	Context.prototype.IsEnabled = function(capability) { return this.go$val.IsEnabled(capability); };
 	Context.Ptr.prototype.LineWidth = function(width) {
 		var c;
 		c = this;
 		c.Object.lineWidth(width);
 	};
-	Context.prototype.LinkProgram = function(program) { return this.go$val.LinkProgram(program); };
+	Context.prototype.LineWidth = function(width) { return this.go$val.LineWidth(width); };
 	Context.Ptr.prototype.LinkProgram = function(program) {
 		var c;
 		c = this;
 		c.Object.linkProgram(program);
 	};
-	Context.prototype.PixelStorei = function(pname, param) { return this.go$val.PixelStorei(pname, param); };
+	Context.prototype.LinkProgram = function(program) { return this.go$val.LinkProgram(program); };
 	Context.Ptr.prototype.PixelStorei = function(pname, param) {
 		var c;
 		c = this;
 		c.Object.pixelStorei(pname, param);
 	};
-	Context.prototype.PolygonOffset = function(factor, units) { return this.go$val.PolygonOffset(factor, units); };
+	Context.prototype.PixelStorei = function(pname, param) { return this.go$val.PixelStorei(pname, param); };
 	Context.Ptr.prototype.PolygonOffset = function(factor, units) {
 		var c;
 		c = this;
 		c.Object.polygonOffset(factor, units);
 	};
-	Context.prototype.ReadPixels = function(x, y, width, height, format, typ, pixels) { return this.go$val.ReadPixels(x, y, width, height, format, typ, pixels); };
+	Context.prototype.PolygonOffset = function(factor, units) { return this.go$val.PolygonOffset(factor, units); };
 	Context.Ptr.prototype.ReadPixels = function(x, y, width, height, format, typ, pixels) {
 		var c;
 		c = this;
 		c.Object.readPixels(x, y, width, height, format, typ, pixels);
 	};
-	Context.prototype.RenderbufferStorage = function(target, internalFormat, width, height) { return this.go$val.RenderbufferStorage(target, internalFormat, width, height); };
+	Context.prototype.ReadPixels = function(x, y, width, height, format, typ, pixels) { return this.go$val.ReadPixels(x, y, width, height, format, typ, pixels); };
 	Context.Ptr.prototype.RenderbufferStorage = function(target, internalFormat, width, height) {
 		var c;
 		c = this;
 		c.Object.renderbufferStorage(target, internalFormat, width, height);
 	};
-	Context.prototype.Scissor = function(x, y, width, height) { return this.go$val.Scissor(x, y, width, height); };
+	Context.prototype.RenderbufferStorage = function(target, internalFormat, width, height) { return this.go$val.RenderbufferStorage(target, internalFormat, width, height); };
 	Context.Ptr.prototype.Scissor = function(x, y, width, height) {
 		var c;
 		c = this;
 		c.Object.scissor(x, y, width, height);
 	};
-	Context.prototype.ShaderSource = function(shader, source) { return this.go$val.ShaderSource(shader, source); };
+	Context.prototype.Scissor = function(x, y, width, height) { return this.go$val.Scissor(x, y, width, height); };
 	Context.Ptr.prototype.ShaderSource = function(shader, source) {
 		var c;
 		c = this;
 		c.Object.shaderSource(shader, go$externalize(source, Go$String));
 	};
-	Context.prototype.TexImage2D = function(target, level, internalFormat, format, kind, image) { return this.go$val.TexImage2D(target, level, internalFormat, format, kind, image); };
+	Context.prototype.ShaderSource = function(shader, source) { return this.go$val.ShaderSource(shader, source); };
 	Context.Ptr.prototype.TexImage2D = function(target, level, internalFormat, format, kind, image) {
 		var c;
 		c = this;
 		c.Object.texImage2D(target, level, internalFormat, format, kind, image);
 	};
-	Context.prototype.TexParameteri = function(target, pname, param) { return this.go$val.TexParameteri(target, pname, param); };
+	Context.prototype.TexImage2D = function(target, level, internalFormat, format, kind, image) { return this.go$val.TexImage2D(target, level, internalFormat, format, kind, image); };
 	Context.Ptr.prototype.TexParameteri = function(target, pname, param) {
 		var c;
 		c = this;
 		c.Object.texParameteri(target, pname, param);
 	};
-	Context.prototype.TexSubImage2D = function(target, level, xoffset, yoffset, format, typ, image) { return this.go$val.TexSubImage2D(target, level, xoffset, yoffset, format, typ, image); };
+	Context.prototype.TexParameteri = function(target, pname, param) { return this.go$val.TexParameteri(target, pname, param); };
 	Context.Ptr.prototype.TexSubImage2D = function(target, level, xoffset, yoffset, format, typ, image) {
 		var c;
 		c = this;
 		c.Object.texSubImage2D(target, level, xoffset, yoffset, format, typ, image);
 	};
-	Context.prototype.Uniform1f = function(location, x) { return this.go$val.Uniform1f(location, x); };
+	Context.prototype.TexSubImage2D = function(target, level, xoffset, yoffset, format, typ, image) { return this.go$val.TexSubImage2D(target, level, xoffset, yoffset, format, typ, image); };
 	Context.Ptr.prototype.Uniform1f = function(location, x) {
 		var c;
 		c = this;
 		c.Object.uniform1f(location, x);
 	};
-	Context.prototype.Uniform1i = function(location, x) { return this.go$val.Uniform1i(location, x); };
+	Context.prototype.Uniform1f = function(location, x) { return this.go$val.Uniform1f(location, x); };
 	Context.Ptr.prototype.Uniform1i = function(location, x) {
 		var c;
 		c = this;
 		c.Object.uniform1i(location, x);
 	};
-	Context.prototype.Uniform2f = function(location, x, y) { return this.go$val.Uniform2f(location, x, y); };
+	Context.prototype.Uniform1i = function(location, x) { return this.go$val.Uniform1i(location, x); };
 	Context.Ptr.prototype.Uniform2f = function(location, x, y) {
 		var c;
 		c = this;
 		c.Object.uniform2f(location, x, y);
 	};
-	Context.prototype.Uniform2i = function(location, x, y) { return this.go$val.Uniform2i(location, x, y); };
+	Context.prototype.Uniform2f = function(location, x, y) { return this.go$val.Uniform2f(location, x, y); };
 	Context.Ptr.prototype.Uniform2i = function(location, x, y) {
 		var c;
 		c = this;
 		c.Object.uniform2i(location, x, y);
 	};
-	Context.prototype.Uniform3f = function(location, x, y, z) { return this.go$val.Uniform3f(location, x, y, z); };
+	Context.prototype.Uniform2i = function(location, x, y) { return this.go$val.Uniform2i(location, x, y); };
 	Context.Ptr.prototype.Uniform3f = function(location, x, y, z) {
 		var c;
 		c = this;
 		c.Object.uniform3f(location, x, y, z);
 	};
-	Context.prototype.Uniform3i = function(location, x, y, z) { return this.go$val.Uniform3i(location, x, y, z); };
+	Context.prototype.Uniform3f = function(location, x, y, z) { return this.go$val.Uniform3f(location, x, y, z); };
 	Context.Ptr.prototype.Uniform3i = function(location, x, y, z) {
 		var c;
 		c = this;
 		c.Object.uniform3i(location, x, y, z);
 	};
-	Context.prototype.Uniform4f = function(location, x, y, z, w) { return this.go$val.Uniform4f(location, x, y, z, w); };
+	Context.prototype.Uniform3i = function(location, x, y, z) { return this.go$val.Uniform3i(location, x, y, z); };
 	Context.Ptr.prototype.Uniform4f = function(location, x, y, z, w) {
 		var c;
 		c = this;
 		c.Object.uniform4f(location, x, y, z, w);
 	};
-	Context.prototype.Uniform4i = function(location, x, y, z, w) { return this.go$val.Uniform4i(location, x, y, z, w); };
+	Context.prototype.Uniform4f = function(location, x, y, z, w) { return this.go$val.Uniform4f(location, x, y, z, w); };
 	Context.Ptr.prototype.Uniform4i = function(location, x, y, z, w) {
 		var c;
 		c = this;
 		c.Object.uniform4i(location, x, y, z, w);
 	};
-	Context.prototype.UniformMatrix2fv = function(location, transpose, value) { return this.go$val.UniformMatrix2fv(location, transpose, value); };
+	Context.prototype.Uniform4i = function(location, x, y, z, w) { return this.go$val.Uniform4i(location, x, y, z, w); };
 	Context.Ptr.prototype.UniformMatrix2fv = function(location, transpose, value) {
 		var c;
 		c = this;
 		c.Object.uniformMatrix2fv(location, go$externalize(transpose, Go$Bool), go$externalize(value, (go$sliceType(Go$Float32))));
 	};
-	Context.prototype.UniformMatrix3fv = function(location, transpose, value) { return this.go$val.UniformMatrix3fv(location, transpose, value); };
+	Context.prototype.UniformMatrix2fv = function(location, transpose, value) { return this.go$val.UniformMatrix2fv(location, transpose, value); };
 	Context.Ptr.prototype.UniformMatrix3fv = function(location, transpose, value) {
 		var c;
 		c = this;
 		c.Object.uniformMatrix3fv(location, go$externalize(transpose, Go$Bool), go$externalize(value, (go$sliceType(Go$Float32))));
 	};
-	Context.prototype.UniformMatrix4fv = function(location, transpose, value) { return this.go$val.UniformMatrix4fv(location, transpose, value); };
+	Context.prototype.UniformMatrix3fv = function(location, transpose, value) { return this.go$val.UniformMatrix3fv(location, transpose, value); };
 	Context.Ptr.prototype.UniformMatrix4fv = function(location, transpose, value) {
 		var c;
 		c = this;
 		c.Object.uniformMatrix4fv(location, go$externalize(transpose, Go$Bool), go$externalize(value, (go$sliceType(Go$Float32))));
 	};
-	Context.prototype.UseProgram = function(program) { return this.go$val.UseProgram(program); };
+	Context.prototype.UniformMatrix4fv = function(location, transpose, value) { return this.go$val.UniformMatrix4fv(location, transpose, value); };
 	Context.Ptr.prototype.UseProgram = function(program) {
 		var c;
 		c = this;
 		c.Object.useProgram(program);
 	};
-	Context.prototype.ValidateProgram = function(program) { return this.go$val.ValidateProgram(program); };
+	Context.prototype.UseProgram = function(program) { return this.go$val.UseProgram(program); };
 	Context.Ptr.prototype.ValidateProgram = function(program) {
 		var c;
 		c = this;
 		c.Object.validateProgram(program);
 	};
-	Context.prototype.VertexAttribPointer = function(index, size, typ, normal, stride, offset) { return this.go$val.VertexAttribPointer(index, size, typ, normal, stride, offset); };
+	Context.prototype.ValidateProgram = function(program) { return this.go$val.ValidateProgram(program); };
 	Context.Ptr.prototype.VertexAttribPointer = function(index, size, typ, normal, stride, offset) {
 		var c;
 		c = this;
 		c.Object.vertexAttribPointer(index, size, typ, go$externalize(normal, Go$Bool), stride, offset);
 	};
-	Context.prototype.Viewport = function(x, y, width, height) { return this.go$val.Viewport(x, y, width, height); };
+	Context.prototype.VertexAttribPointer = function(index, size, typ, normal, stride, offset) { return this.go$val.VertexAttribPointer(index, size, typ, normal, stride, offset); };
 	Context.Ptr.prototype.Viewport = function(x, y, width, height) {
 		var c;
 		c = this;
 		c.Object.viewport(x, y, width, height);
 	};
+	Context.prototype.Viewport = function(x, y, width, height) { return this.go$val.Viewport(x, y, width, height); };
 	go$pkg.ARRAY_BUFFER = 34962;
 	go$pkg.ARRAY_BUFFER_BINDING = 34964;
 	go$pkg.ATTACHED_SHADERS = 35717;
@@ -4240,9 +4219,6 @@ go$packages["github.com/ajhager/webgl"] = (function() {
 })();
 go$packages["math"] = (function() {
   var go$pkg = {};
-	var Abs = function(x) {
-		throw go$panic("Native function not implemented: Abs");
-	};
 	var abs = function(x) {
 		if (x < 0) {
 			return -x;
@@ -4264,9 +4240,6 @@ go$packages["math"] = (function() {
 		}
 		t = x - 1;
 		return Log1p(t + Sqrt(2 * t + t * t));
-	};
-	var Asin = function(x) {
-		throw go$panic("Native function not implemented: Asin");
 	};
 	var asin = function(x) {
 		var sign, temp;
@@ -4291,9 +4264,6 @@ go$packages["math"] = (function() {
 			temp = -temp;
 		}
 		return temp;
-	};
-	var Acos = function(x) {
-		throw go$panic("Native function not implemented: Acos");
 	};
 	var acos = function(x) {
 		return 1.5707963267948966 - Asin(x);
@@ -4339,9 +4309,6 @@ go$packages["math"] = (function() {
 		}
 		return 0.7853981633974483 + xatan((x - 1) / (x + 1)) + 3.061616997868383e-17;
 	};
-	var Atan = function(x) {
-		throw go$panic("Native function not implemented: Atan");
-	};
 	var atan = function(x) {
 		if (x === 0) {
 			return x;
@@ -4350,9 +4317,6 @@ go$packages["math"] = (function() {
 			return satan(x);
 		}
 		return -satan(-x);
-	};
-	var Atan2 = function(y, x) {
-		throw go$panic("Native function not implemented: Atan2");
 	};
 	var atan2 = function(y, x) {
 		var q;
@@ -4418,28 +4382,6 @@ go$packages["math"] = (function() {
 		}
 		return temp;
 	};
-	var Inf = function(sign) {
-		var v;
-		v = new Go$Uint64(0, 0);
-		if (sign >= 0) {
-			v = new Go$Uint64(2146435072, 0);
-		} else {
-			v = new Go$Uint64(4293918720, 0);
-		}
-		return Float64frombits(v);
-	};
-	var NaN = function() {
-		return Float64frombits(new Go$Uint64(2146959360, 1));
-	};
-	var IsNaN = function(f) {
-		var is;
-		is = false;
-		is = !(f === f);
-		return is;
-	};
-	var IsInf = function(f, sign) {
-		return sign >= 0 && f > 1.7976931348623157e+308 || sign <= 0 && f < -1.7976931348623157e+308;
-	};
 	var normalize = function(x) {
 		var y, exp$1, _tuple, _tuple$1;
 		y = 0;
@@ -4488,18 +4430,8 @@ go$packages["math"] = (function() {
 		}
 		return y;
 	};
-	var Copysign = function(x, y) {
-		var x$1, x$2, x$3, x$4;
-		return Float64frombits((x$1 = (x$2 = Float64bits(x), new Go$Uint64(x$2.high &~ 2147483648, (x$2.low &~ 0) >>> 0)), x$3 = (x$4 = Float64bits(y), new Go$Uint64(x$4.high & 2147483648, (x$4.low & 0) >>> 0)), new Go$Uint64(x$1.high | x$3.high, (x$1.low | x$3.low) >>> 0)));
-	};
-	var Dim = function(x, y) {
-		throw go$panic("Native function not implemented: Dim");
-	};
 	var dim = function(x, y) {
 		return max(x - y, 0);
-	};
-	var Max = function(x, y) {
-		throw go$panic("Native function not implemented: Max");
 	};
 	var max = function(x, y) {
 		if (IsInf(x, 1) || IsInf(y, 1)) {
@@ -4516,9 +4448,6 @@ go$packages["math"] = (function() {
 			return x;
 		}
 		return y;
-	};
-	var Min = function(x, y) {
-		throw go$panic("Native function not implemented: Min");
 	};
 	var min = function(x, y) {
 		if (IsInf(x, -1) || IsInf(y, -1)) {
@@ -4669,9 +4598,6 @@ go$packages["math"] = (function() {
 		}
 		return 0;
 	};
-	var Exp = function(x) {
-		throw go$panic("Native function not implemented: Exp");
-	};
 	var exp = function(x) {
 		var k, hi, lo;
 		if (IsNaN(x) || IsInf(x, 1)) {
@@ -4694,9 +4620,6 @@ go$packages["math"] = (function() {
 		hi = x - k * 0.6931471803691238;
 		lo = k * 1.9082149292705877e-10;
 		return expmulti(hi, lo, k);
-	};
-	var Exp2 = function(x) {
-		throw go$panic("Native function not implemented: Exp2");
 	};
 	var exp2 = function(x) {
 		var k, t, hi, lo;
@@ -4727,9 +4650,6 @@ go$packages["math"] = (function() {
 		c = r - t * (0.16666666666666602 + t * (-0.0027777777777015593 + t * (6.613756321437934e-05 + t * (-1.6533902205465252e-06 + t * 4.1381367970572385e-08))));
 		y = 1 - ((lo - (r * c) / (2 - c)) - hi);
 		return Ldexp(y, k);
-	};
-	var Expm1 = function(x) {
-		throw go$panic("Native function not implemented: Expm1");
 	};
 	var expm1 = function(x) {
 		var absx, sign, c, k, hi, lo, t, hfx, hxs, r1, t$1, e, y, x$1, x$2, x$3, t$2, y$1, x$4, x$5, t$3, y$2, x$6, x$7;
@@ -4817,9 +4737,6 @@ go$packages["math"] = (function() {
 		}
 		return x - (x * e - hxs);
 	};
-	var Floor = function(x) {
-		throw go$panic("Native function not implemented: Floor");
-	};
 	var floor = function(x) {
 		var _tuple, d, fract, _tuple$1, d$1;
 		if (x === 0 || IsNaN(x) || IsInf(x, 0)) {
@@ -4835,14 +4752,8 @@ go$packages["math"] = (function() {
 		_tuple$1 = Modf(x), d$1 = _tuple$1[0];
 		return d$1;
 	};
-	var Ceil = function(x) {
-		throw go$panic("Native function not implemented: Ceil");
-	};
 	var ceil = function(x) {
 		return -Floor(-x);
-	};
-	var Trunc = function(x) {
-		throw go$panic("Native function not implemented: Trunc");
 	};
 	var trunc = function(x) {
 		var _tuple, d;
@@ -4851,9 +4762,6 @@ go$packages["math"] = (function() {
 		}
 		_tuple = Modf(x), d = _tuple[0];
 		return d;
-	};
-	var Frexp = function(f) {
-		throw go$panic("Native function not implemented: Frexp");
 	};
 	var frexp = function(f) {
 		var frac, exp$1, _tuple, _tuple$1, _tuple$2, x, x$1;
@@ -4960,9 +4868,6 @@ go$packages["math"] = (function() {
 			return xf === 0;
 		}
 		return false;
-	};
-	var Hypot = function(p, q) {
-		throw go$panic("Native function not implemented: Hypot");
 	};
 	var hypot = function(p, q) {
 		var _tuple;
@@ -5425,9 +5330,6 @@ go$packages["math"] = (function() {
 		}
 		return b;
 	};
-	var Ldexp = function(frac, exp$1) {
-		throw go$panic("Native function not implemented: Ldexp");
-	};
 	var ldexp = function(frac, exp$1) {
 		var _tuple, e, x, m, x$1;
 		if (frac === 0) {
@@ -5636,9 +5538,6 @@ go$packages["math"] = (function() {
 		}
 		return -x;
 	};
-	var Log = function(x) {
-		throw go$panic("Native function not implemented: Log");
-	};
 	var log = function(x) {
 		var _tuple, f1, ki, f, k, s, s2, s4, t1, t2, R, hfsq;
 		if (IsNaN(x) || IsInf(x, 1)) {
@@ -5664,22 +5563,13 @@ go$packages["math"] = (function() {
 		hfsq = 0.5 * f * f;
 		return k * 0.6931471803691238 - ((hfsq - (s * (hfsq + R) + k * 1.9082149292705877e-10)) - f);
 	};
-	var Log10 = function(x) {
-		throw go$panic("Native function not implemented: Log10");
-	};
 	var log10 = function(x) {
 		return Log(x) * 0.4342944819032518;
-	};
-	var Log2 = function(x) {
-		throw go$panic("Native function not implemented: Log2");
 	};
 	var log2 = function(x) {
 		var _tuple, frac, exp$1;
 		_tuple = Frexp(x), frac = _tuple[0], exp$1 = _tuple[1];
 		return Log(frac) * 1.4426950408889634 + exp$1;
-	};
-	var Log1p = function(x) {
-		throw go$panic("Native function not implemented: Log1p");
 	};
 	var log1p = function(x) {
 		var absx, f, iu, k, c, u, x$1, x$2, hfsq, s, R, z;
@@ -5789,9 +5679,6 @@ go$packages["math"] = (function() {
 		_tuple = normalize(x), x = _tuple[0], exp$1 = _tuple[1];
 		return ((((x$1 = (go$shiftRightUint64(Float64bits(x), 52)), new Go$Uint64(x$1.high & 0, (x$1.low & 2047) >>> 0)).low >> 0) - 1023 >> 0) + exp$1 >> 0);
 	};
-	var Mod = function(x, y) {
-		throw go$panic("Native function not implemented: Mod");
-	};
 	var mod = function(x, y) {
 		var _tuple, yfr, yexp, sign, r, _tuple$1, rfr, rexp;
 		if (y === 0 || IsInf(x, 0) || IsNaN(x) || IsNaN(y)) {
@@ -5818,9 +5705,6 @@ go$packages["math"] = (function() {
 			r = -r;
 		}
 		return r;
-	};
-	var Modf = function(f) {
-		throw go$panic("Native function not implemented: Modf");
 	};
 	var modf = function(f) {
 		var int$1, frac, _tuple, _tuple$1, _tuple$2, x, e, x$1, x$2;
@@ -5865,91 +5749,6 @@ go$packages["math"] = (function() {
 		_tuple = Modf(x), xi = _tuple[0], xf = _tuple[1];
 		return xf === 0 && (x$1 = (x$2 = new Go$Int64(0, xi), new Go$Int64(x$2.high & 0, (x$2.low & 1) >>> 0)), (x$1.high === 0 && x$1.low === 1));
 	};
-	var Pow = function(x, y) {
-		var absy, flip, _tuple, yi, yf, a1, ae, _tuple$1, x1, xe, i, x$1;
-		if (y === 0 || x === 1) {
-			return 1;
-		} else if (y === 1) {
-			return x;
-		} else if (y === 0.5) {
-			return Sqrt(x);
-		} else if (y === -0.5) {
-			return 1 / Sqrt(x);
-		} else if (IsNaN(x) || IsNaN(y)) {
-			return NaN();
-		} else if (x === 0) {
-			if (y < 0) {
-				if (isOddInt(y)) {
-					return Copysign(Inf(1), x);
-				}
-				return Inf(1);
-			} else if (y > 0) {
-				if (isOddInt(y)) {
-					return x;
-				}
-				return 0;
-			}
-		} else if (IsInf(y, 0)) {
-			if (x === -1) {
-				return 1;
-			} else if ((Abs(x) < 1) === IsInf(y, 1)) {
-				return 0;
-			} else {
-				return Inf(1);
-			}
-		} else if (IsInf(x, 0)) {
-			if (IsInf(x, -1)) {
-				return Pow(1 / x, -y);
-			}
-			if (y < 0) {
-				return 0;
-			} else if (y > 0) {
-				return Inf(1);
-			}
-		}
-		absy = y;
-		flip = false;
-		if (absy < 0) {
-			absy = -absy;
-			flip = true;
-		}
-		_tuple = Modf(absy), yi = _tuple[0], yf = _tuple[1];
-		if (!(yf === 0) && x < 0) {
-			return NaN();
-		}
-		if (yi >= 9.223372036854776e+18) {
-			return Exp(y * Log(x));
-		}
-		a1 = 1;
-		ae = 0;
-		if (!(yf === 0)) {
-			if (yf > 0.5) {
-				yf = yf - 1;
-				yi = yi + 1;
-			}
-			a1 = Exp(yf * Log(x));
-		}
-		_tuple$1 = Frexp(x), x1 = _tuple$1[0], xe = _tuple$1[1];
-		i = new Go$Int64(0, yi);
-		while (!((i.high === 0 && i.low === 0))) {
-			if ((x$1 = new Go$Int64(i.high & 0, (i.low & 1) >>> 0), (x$1.high === 0 && x$1.low === 1))) {
-				a1 = a1 * (x1);
-				ae = (ae + (xe) >> 0);
-			}
-			x1 = x1 * (x1);
-			xe = (xe << 1 >> 0);
-			if (x1 < 0.5) {
-				x1 = x1 + (x1);
-				xe = (xe - 1 >> 0);
-			}
-			i = go$shiftRightInt64(i, 1);
-		}
-		if (flip) {
-			a1 = 1 / a1;
-			ae = -ae;
-		}
-		return Ldexp(a1, ae);
-	};
 	var Pow10 = function(e) {
 		var _q, m;
 		if (e <= -325) {
@@ -5965,9 +5764,6 @@ go$packages["math"] = (function() {
 		}
 		m = (_q = e / 2, (_q === _q && _q !== 1/0 && _q !== -1/0) ? _q >> 0 : go$throwRuntimeError("integer divide by zero"));
 		return Pow10(m) * Pow10((e - m >> 0));
-	};
-	var Remainder = function(x, y) {
-		throw go$panic("Native function not implemented: Remainder");
 	};
 	var remainder = function(x, y) {
 		var sign, yHalf;
@@ -6011,13 +5807,6 @@ go$packages["math"] = (function() {
 		}
 		return x;
 	};
-	var Signbit = function(x) {
-		var x$1, x$2;
-		return !((x$1 = (x$2 = Float64bits(x), new Go$Uint64(x$2.high & 2147483648, (x$2.low & 0) >>> 0)), (x$1.high === 0 && x$1.low === 0)));
-	};
-	var Cos = function(x) {
-		throw go$panic("Native function not implemented: Cos");
-	};
 	var cos = function(x) {
 		var sign, j, y, x$1, z, zz;
 		if (IsNaN(x) || IsInf(x, 0)) {
@@ -6053,9 +5842,6 @@ go$packages["math"] = (function() {
 		}
 		return y;
 	};
-	var Sin = function(x) {
-		throw go$panic("Native function not implemented: Sin");
-	};
 	var sin = function(x) {
 		var sign, j, y, x$1, z, zz;
 		if (x === 0 || IsNaN(x)) {
@@ -6090,9 +5876,6 @@ go$packages["math"] = (function() {
 			y = -y;
 		}
 		return y;
-	};
-	var Sincos = function(x) {
-		throw go$panic("Native function not implemented: Sincos");
 	};
 	var sincos = function(x) {
 		var sin$1, cos$1, _tuple, _tuple$1, _tuple$2, sinSign, cosSign, j, y, x$1, _tuple$3, z, zz, _tuple$4;
@@ -6171,9 +5954,6 @@ go$packages["math"] = (function() {
 		}
 		return (Exp(x) + Exp(-x)) / 2;
 	};
-	var Sqrt = function(x) {
-		throw go$panic("Native function not implemented: Sqrt");
-	};
 	var sqrt = function(x) {
 		var ix, x$1, exp$1, x$2, q, s, r, t, x$3, x$4, x$5, x$6, x$7;
 		if (x === 0 || IsNaN(x) || IsInf(x, 1)) {
@@ -6218,9 +5998,6 @@ go$packages["math"] = (function() {
 	};
 	var sqrtC = function(f, r) {
 		r.go$set(sqrt(f));
-	};
-	var Tan = function(x) {
-		throw go$panic("Native function not implemented: Tan");
 	};
 	var tan = function(x) {
 		var sign, j, y, x$1, z, zz, x$2;
@@ -6278,18 +6055,125 @@ go$packages["math"] = (function() {
 		}
 		return z;
 	};
-	var Float32bits = function(f) {
-		return f;
-	};
+	var Abs = Math.abs;
+	var Asin = Math.asin;
+	var Acos = Math.acos;
+	var Atan = Math.atan;
+	var Atan2 = Math.atan2;
+	var Inf = function(sign) { return sign >= 0 ? 1/0 : -1/0; };
+	var NaN = function() { return 0/0; };
+	var IsNaN = function(f) { return f !== f; };
+	var IsInf = function(f, sign) { if (f === -1/0) { return sign <= 0; } if (f === 1/0) { return sign >= 0; } return false; };
+	var Copysign = function(x, y) { return (x < 0 || 1/x === 1/-0) !== (y < 0 || 1/y === 1/-0) ? -x : x; };
+	var Dim = function(x, y) { return Math.max(x - y, 0); };
+	var Max = function(x, y) { return (x === 1/0 || y === 1/0) ? 1/0 : Math.max(x, y); };
+	var Min = function(x, y) { return (x === -1/0 || y === -1/0) ? -1/0 : Math.min(x, y); };
+	var Exp = Math.exp;
+	var Exp2 = function(x) { return Math.pow(2, x); };
+	var Expm1 = expm1;
+	var Floor = Math.floor;
+	var Ceil = Math.ceil;
+	var Trunc = function(x) { return (x === 1/0 || x === -1/0 || x !== x || 1/x === 1/-0) ? x : x >> 0; };
+	var Frexp = frexp;
+	var Hypot = hypot;
+	var Ldexp = function(frac, exp) {
+			if (frac === 0) { return frac; };
+			if (exp >= 1024) { return frac * Math.pow(2, 1023) * Math.pow(2, exp - 1023); }
+			if (exp <= -1024) { return frac * Math.pow(2, -1023) * Math.pow(2, exp + 1023); }
+			return frac * Math.pow(2, exp);
+		};
+	var Log = Math.log;
+	var Log10 = log10;
+	var Log2 = log2;
+	var Log1p = log1p;
+	var Mod = function(x, y) { return x % y; };
+	var Modf = function(f) { if (f === -1/0 || f === 1/0) { return [f, 0/0] } var frac = f % 1; return [f - frac, frac]; };
+	var Pow = function(x, y) { return ((x === 1) || (x === -1 && (y === -1/0 || y === 1/0))) ? 1 : Math.pow(x, y); };
+	var Remainder = remainder;
+	var Signbit = function(x) { return x < 0 || 1/x === 1/-0; };
+	var Cos = Math.cos;
+	var Sin = Math.sin;
+	var Sincos = function(x) { return [Math.sin(x), Math.cos(x)]; };
+	var Sqrt = Math.sqrt;
+	var Tan = Math.tan;
+	var Float32bits = go$float32bits;
 	var Float32frombits = function(b) {
-		return b;
-	};
+			var s, e, m;
+			s = 1;
+			if (!(((b & 2147483648) >>> 0) === 0)) {
+				s = -1;
+			}
+			e = (((((b >>> 23) >>> 0)) & 255) >>> 0);
+			m = ((b & 8388607) >>> 0);
+			if (e === 255) {
+				if (m === 0) {
+					return s / 0;
+				}
+				return 0/0;
+			}
+			if (!(e === 0)) {
+				m = (m + (8388608) >>> 0);
+			}
+			if (e === 0) {
+				e = 1;
+			}
+			return Ldexp(m, e - 127 - 23) * s;
+		};
 	var Float64bits = function(f) {
-		return f;
-	};
+			var s, e, x, y, x$1, y$1, x$2, y$2;
+			if (f === 0) {
+				if (f === 0 && 1 / f === 1 / -0) {
+					return new Go$Uint64(2147483648, 0);
+				}
+				return new Go$Uint64(0, 0);
+			}
+			if (!(f === f)) {
+				return new Go$Uint64(2146959360, 1);
+			}
+			s = new Go$Uint64(0, 0);
+			if (f < 0) {
+				s = new Go$Uint64(2147483648, 0);
+				f = -f;
+			}
+			e = 1075;
+			while (f >= 9.007199254740992e+15) {
+				f = f / (2);
+				if (e === 2047) {
+					break;
+				}
+				e = (e + (1) >>> 0);
+			}
+			while (f < 4.503599627370496e+15) {
+				e = (e - (1) >>> 0);
+				if (e === 0) {
+					break;
+				}
+				f = f * (2);
+			}
+			return (x$2 = (x = s, y = go$shiftLeft64(new Go$Uint64(0, e), 52), new Go$Uint64(x.high | y.high, (x.low | y.low) >>> 0)), y$2 = ((x$1 = new Go$Uint64(0, f), y$1 = new Go$Uint64(1048576, 0), new Go$Uint64(x$1.high &~ y$1.high, (x$1.low &~ y$1.low) >>> 0))), new Go$Uint64(x$2.high | y$2.high, (x$2.low | y$2.low) >>> 0));
+		};
 	var Float64frombits = function(b) {
-		return b;
-	};
+			var s, x, y, x$1, y$1, x$2, y$2, e, x$3, y$3, m, x$4, y$4, x$5, y$5, x$6, y$6, x$7, y$7, x$8, y$8;
+			s = 1;
+			if (!((x$1 = (x = b, y = new Go$Uint64(2147483648, 0), new Go$Uint64(x.high & y.high, (x.low & y.low) >>> 0)), y$1 = new Go$Uint64(0, 0), x$1.high === y$1.high && x$1.low === y$1.low))) {
+				s = -1;
+			}
+			e = (x$2 = (go$shiftRightUint64(b, 52)), y$2 = new Go$Uint64(0, 2047), new Go$Uint64(x$2.high & y$2.high, (x$2.low & y$2.low) >>> 0));
+			m = (x$3 = b, y$3 = new Go$Uint64(1048575, 4294967295), new Go$Uint64(x$3.high & y$3.high, (x$3.low & y$3.low) >>> 0));
+			if ((x$4 = e, y$4 = new Go$Uint64(0, 2047), x$4.high === y$4.high && x$4.low === y$4.low)) {
+				if ((x$5 = m, y$5 = new Go$Uint64(0, 0), x$5.high === y$5.high && x$5.low === y$5.low)) {
+					return s / 0;
+				}
+				return 0/0;
+			}
+			if (!((x$6 = e, y$6 = new Go$Uint64(0, 0), x$6.high === y$6.high && x$6.low === y$6.low))) {
+				m = (x$7 = m, y$7 = (new Go$Uint64(1048576, 0)), new Go$Uint64(x$7.high + y$7.high, x$7.low + y$7.low));
+			}
+			if ((x$8 = e, y$8 = new Go$Uint64(0, 0), x$8.high === y$8.high && x$8.low === y$8.low)) {
+				e = new Go$Uint64(0, 1);
+			}
+			return Ldexp((m.high * 4294967296 + m.low), e.low - 1023 - 52) * s;
+		};
 	var uvnan = 9221120237041090561;
 	var uvinf = 9218868437227405312;
 	var uvneginf = -4503599627370496;
@@ -6428,127 +6312,6 @@ go$packages["math"] = (function() {
 	var _tanQ = go$makeNativeArray("Float64", 5, function() { return 0; });
 	var tanhP = go$makeNativeArray("Float64", 3, function() { return 0; });
 	var tanhQ = go$makeNativeArray("Float64", 3, function() { return 0; });
-Abs = Math.abs;
-		Acos = Math.acos;
-		Asin = Math.asin;
-		Atan = Math.atan;
-		Atan2 = Math.atan2;
-		Ceil = Math.ceil;
-		Copysign = function(x, y) { return (x < 0 || 1/x === 1/-0) !== (y < 0 || 1/y === 1/-0) ? -x : x; };
-		Cos = Math.cos;
-		Dim = function(x, y) { return Math.max(x - y, 0); };
-		Exp = Math.exp;
-		Exp2 = function(x) { return Math.pow(2, x); };
-		Expm1 = expm1;
-		Floor = Math.floor;
-		Frexp = frexp;
-		Hypot = hypot;
-		Inf = function(sign) { return sign >= 0 ? 1/0 : -1/0; };
-		IsInf = function(f, sign) { if (f === -1/0) { return sign <= 0; } if (f === 1/0) { return sign >= 0; } return false; };
-		IsNaN = function(f) { return f !== f; };
-		Ldexp = function(frac, exp) {
-			if (frac === 0) { return frac; };
-			if (exp >= 1024) { return frac * Math.pow(2, 1023) * Math.pow(2, exp - 1023); }
-			if (exp <= -1024) { return frac * Math.pow(2, -1023) * Math.pow(2, exp + 1023); }
-			return frac * Math.pow(2, exp);
-		};
-		Log = Math.log;
-		Log1p = log1p;
-		Log2 = log2;
-		Log10 = log10;
-		Max = function(x, y) { return (x === 1/0 || y === 1/0) ? 1/0 : Math.max(x, y); };
-		Min = function(x, y) { return (x === -1/0 || y === -1/0) ? -1/0 : Math.min(x, y); };
-		Mod = function(x, y) { return x % y; };
-		Modf = function(f) { if (f === -1/0 || f === 1/0) { return [f, 0/0] } var frac = f % 1; return [f - frac, frac]; };
-		NaN = function() { return 0/0; };
-		Pow = function(x, y) { return ((x === 1) || (x === -1 && (y === -1/0 || y === 1/0))) ? 1 : Math.pow(x, y); };
-		Remainder = remainder;
-		Signbit = function(x) { return x < 0 || 1/x === 1/-0; };
-		Sin = Math.sin;
-		Sincos = function(x) { return [Math.sin(x), Math.cos(x)]; };
-		Sqrt = Math.sqrt;
-		Tan = Math.tan;
-		Trunc = function(x) { return (x === 1/0 || x === -1/0 || x !== x || 1/x === 1/-0) ? x : x >> 0; };
-
-		// generated from bitcasts/bitcasts.go
-		Float32bits = go$float32bits;
-		Float32frombits = function(b) {
-			var s, e, m;
-			s = 1;
-			if (!(((b & 2147483648) >>> 0) === 0)) {
-				s = -1;
-			}
-			e = (((((b >>> 23) >>> 0)) & 255) >>> 0);
-			m = ((b & 8388607) >>> 0);
-			if (e === 255) {
-				if (m === 0) {
-					return s / 0;
-				}
-				return 0/0;
-			}
-			if (!(e === 0)) {
-				m = (m + (8388608) >>> 0);
-			}
-			if (e === 0) {
-				e = 1;
-			}
-			return Ldexp(m, e - 127 - 23) * s;
-		};
-		Float64bits = function(f) {
-			var s, e, x, y, x$1, y$1, x$2, y$2;
-			if (f === 0) {
-				if (f === 0 && 1 / f === 1 / -0) {
-					return new Go$Uint64(2147483648, 0);
-				}
-				return new Go$Uint64(0, 0);
-			}
-			if (!(f === f)) {
-				return new Go$Uint64(2146959360, 1);
-			}
-			s = new Go$Uint64(0, 0);
-			if (f < 0) {
-				s = new Go$Uint64(2147483648, 0);
-				f = -f;
-			}
-			e = 1075;
-			while (f >= 9.007199254740992e+15) {
-				f = f / (2);
-				if (e === 2047) {
-					break;
-				}
-				e = (e + (1) >>> 0);
-			}
-			while (f < 4.503599627370496e+15) {
-				e = (e - (1) >>> 0);
-				if (e === 0) {
-					break;
-				}
-				f = f * (2);
-			}
-			return (x$2 = (x = s, y = go$shiftLeft64(new Go$Uint64(0, e), 52), new Go$Uint64(x.high | y.high, (x.low | y.low) >>> 0)), y$2 = ((x$1 = new Go$Uint64(0, f), y$1 = new Go$Uint64(1048576, 0), new Go$Uint64(x$1.high &~ y$1.high, (x$1.low &~ y$1.low) >>> 0))), new Go$Uint64(x$2.high | y$2.high, (x$2.low | y$2.low) >>> 0));
-		};
-		Float64frombits = function(b) {
-			var s, x, y, x$1, y$1, x$2, y$2, e, x$3, y$3, m, x$4, y$4, x$5, y$5, x$6, y$6, x$7, y$7, x$8, y$8;
-			s = 1;
-			if (!((x$1 = (x = b, y = new Go$Uint64(2147483648, 0), new Go$Uint64(x.high & y.high, (x.low & y.low) >>> 0)), y$1 = new Go$Uint64(0, 0), x$1.high === y$1.high && x$1.low === y$1.low))) {
-				s = -1;
-			}
-			e = (x$2 = (go$shiftRightUint64(b, 52)), y$2 = new Go$Uint64(0, 2047), new Go$Uint64(x$2.high & y$2.high, (x$2.low & y$2.low) >>> 0));
-			m = (x$3 = b, y$3 = new Go$Uint64(1048575, 4294967295), new Go$Uint64(x$3.high & y$3.high, (x$3.low & y$3.low) >>> 0));
-			if ((x$4 = e, y$4 = new Go$Uint64(0, 2047), x$4.high === y$4.high && x$4.low === y$4.low)) {
-				if ((x$5 = m, y$5 = new Go$Uint64(0, 0), x$5.high === y$5.high && x$5.low === y$5.low)) {
-					return s / 0;
-				}
-				return 0/0;
-			}
-			if (!((x$6 = e, y$6 = new Go$Uint64(0, 0), x$6.high === y$6.high && x$6.low === y$6.low))) {
-				m = (x$7 = m, y$7 = (new Go$Uint64(1048576, 0)), new Go$Uint64(x$7.high + y$7.high, x$7.low + y$7.low));
-			}
-			if ((x$8 = e, y$8 = new Go$Uint64(0, 0), x$8.high === y$8.high && x$8.low === y$8.low)) {
-				e = new Go$Uint64(0, 1);
-			}
-			return Ldexp((m.high * 4294967296 + m.low), e.low - 1023 - 52) * s;
-		};
 	go$pkg.Abs = Abs;
 	go$pkg.Acosh = Acosh;
 	go$pkg.Asin = Asin;
@@ -7370,13 +7133,12 @@ go$packages["github.com/ajhager/enj"] = (function() {
 	var NewAssets = function() {
 		return new Assets.Ptr((go$sliceType(Go$String)).make(0, 0, function() { return ""; }), new Go$Map(), 0, 0);
 	};
-	Assets.prototype.Image = function(path) { return this.go$val.Image(path); };
 	Assets.Ptr.prototype.Image = function(path) {
 		var a;
 		a = this;
 		a.queue = go$append(a.queue, path);
 	};
-	Assets.prototype.Load = function(onFinish) { return this.go$val.Load(onFinish); };
+	Assets.prototype.Image = function(path) { return this.go$val.Image(path); };
 	Assets.Ptr.prototype.Load = function(onFinish) {
 		var a, _ref, _i, _slice, _index, path, img, _key;
 		a = this;
@@ -7405,6 +7167,7 @@ go$packages["github.com/ajhager/enj"] = (function() {
 			}
 		}
 	};
+	Assets.prototype.Load = function(onFinish) { return this.go$val.Load(onFinish); };
 	var colorToFloat = function(r, g, b, a) {
 		var i;
 		i = (((((((((((a >>> 0) << 24 >>> 0) | ((b >>> 0) << 16 >>> 0)) >>> 0) | ((g >>> 0) << 8 >>> 0)) >>> 0) | (r >>> 0)) >>> 0)) & 4278190079) >>> 0);
@@ -7446,7 +7209,6 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		batch.blendDstFunc = 771;
 		return batch;
 	};
-	Batch.prototype.Begin = function() { return this.go$val.Begin(); };
 	Batch.Ptr.prototype.Begin = function() {
 		var b, shader;
 		b = this;
@@ -7460,7 +7222,7 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		}
 		shader.Bind();
 	};
-	Batch.prototype.End = function() { return this.go$val.End(); };
+	Batch.prototype.Begin = function() { return this.go$val.Begin(); };
 	Batch.Ptr.prototype.End = function() {
 		var b;
 		b = this;
@@ -7478,7 +7240,7 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		b.gl.Context.UseProgram(null);
 		b.lastTexture = (go$ptrType(Texture)).nil;
 	};
-	Batch.prototype.flush = function() { return this.go$val.flush(); };
+	Batch.prototype.End = function() { return this.go$val.End(); };
 	Batch.Ptr.prototype.flush = function() {
 		var b, gl, x, x$1, view, x$2, x$3;
 		b = this;
@@ -7511,7 +7273,7 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		gl.Context.DrawElements(4, (x$2 = b.index, x$3 = 6, ((((x$2 >>> 16 << 16) * x$3 >> 0) + (x$2 << 16 >>> 16) * x$3) >> 0)), 5123, 0);
 		b.index = 0;
 	};
-	Batch.prototype.Draw = function(r, x, y, originX, originY, scaleX, scaleY, rotation) { return this.go$val.Draw(r, x, y, originX, originY, scaleX, scaleY, rotation); };
+	Batch.prototype.flush = function() { return this.go$val.flush(); };
 	Batch.Ptr.prototype.Draw = function(r, x, y, originX, originY, scaleX, scaleY, rotation) {
 		var b, worldOriginX, worldOriginY, fx, fy, fx2, fy2, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y, x1, y1, x2, y2, x3, y3, x4, y4, rot, cos, sin, x$1, x$2, idx;
 		b = this;
@@ -7606,12 +7368,13 @@ go$packages["github.com/ajhager/enj"] = (function() {
 			b.flush();
 		}
 	};
-	Batch.prototype.SetColor = function(red, green, blue, alpha) { return this.go$val.SetColor(red, green, blue, alpha); };
+	Batch.prototype.Draw = function(r, x, y, originX, originY, scaleX, scaleY, rotation) { return this.go$val.Draw(r, x, y, originX, originY, scaleX, scaleY, rotation); };
 	Batch.Ptr.prototype.SetColor = function(red, green, blue, alpha) {
 		var b;
 		b = this;
 		b.color = colorToFloat(red, green, blue, alpha);
 	};
+	Batch.prototype.SetColor = function(red, green, blue, alpha) { return this.go$val.SetColor(red, green, blue, alpha); };
 	var NewCanvas = function(width, height, fullscreen, container, ca) {
 		var document, view, target, devicePixelRatio, _tuple, gl, err, canvas;
 		document = go$global.document;
@@ -7638,7 +7401,6 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		canvas.Resize(width, height, fullscreen);
 		return [canvas, null];
 	};
-	Canvas.prototype.Resize = function(width, height, fullscreen) { return this.go$val.Resize(width, height, fullscreen); };
 	Canvas.Ptr.prototype.Resize = function(width, height, fullscreen) {
 		var c, x, x$1, window;
 		c = this;
@@ -7657,7 +7419,7 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		}
 		c.Context.Object.viewport(0, 0, c.Object.width, c.Object.height);
 	};
-	Canvas.prototype.OnLoss = function(handler) { return this.go$val.OnLoss(handler); };
+	Canvas.prototype.Resize = function(width, height, fullscreen) { return this.go$val.Resize(width, height, fullscreen); };
 	Canvas.Ptr.prototype.OnLoss = function(handler) {
 		var c;
 		c = this;
@@ -7666,7 +7428,7 @@ go$packages["github.com/ajhager/enj"] = (function() {
 			handler();
 		}), (go$funcType([js.Object], [], false))), go$externalize(false, Go$Bool));
 	};
-	Canvas.prototype.OnRestored = function(handler) { return this.go$val.OnRestored(handler); };
+	Canvas.prototype.OnLoss = function(handler) { return this.go$val.OnLoss(handler); };
 	Canvas.Ptr.prototype.OnRestored = function(handler) {
 		var c;
 		c = this;
@@ -7683,30 +7445,31 @@ go$packages["github.com/ajhager/enj"] = (function() {
 			handler();
 		}), (go$funcType([js.Object], [], false))), go$externalize(false, Go$Bool));
 	};
-	Canvas.prototype.Width = function() { return this.go$val.Width(); };
+	Canvas.prototype.OnRestored = function(handler) { return this.go$val.OnRestored(handler); };
 	Canvas.Ptr.prototype.Width = function() {
 		var c;
 		c = this;
 		return c.width;
 	};
-	Canvas.prototype.Height = function() { return this.go$val.Height(); };
+	Canvas.prototype.Width = function() { return this.go$val.Width(); };
 	Canvas.Ptr.prototype.Height = function() {
 		var c;
 		c = this;
 		return c.height;
 	};
-	Canvas.prototype.PixelRatio = function() { return this.go$val.PixelRatio(); };
+	Canvas.prototype.Height = function() { return this.go$val.Height(); };
 	Canvas.Ptr.prototype.PixelRatio = function() {
 		var c;
 		c = this;
 		return c.pixelRatio;
 	};
-	Canvas.prototype.AddResource = function(r) { return this.go$val.AddResource(r); };
+	Canvas.prototype.PixelRatio = function() { return this.go$val.PixelRatio(); };
 	Canvas.Ptr.prototype.AddResource = function(r) {
 		var c;
 		c = this;
 		c.resources = go$append(c.resources, r);
 	};
+	Canvas.prototype.AddResource = function(r) { return this.go$val.AddResource(r); };
 	var NewGame = function(width, height, fullscreen, container, responder) {
 		var attrs, _tuple, canvas, err, game, dt, _recv;
 		attrs = webgl.DefaultAttributes();
@@ -7757,7 +7520,6 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		RequestAnimationFrame((_recv = game, function(dt) { return _recv.create(dt); }));
 		return game;
 	};
-	Game.prototype.create = function(dt) { return this.go$val.create(dt); };
 	Game.Ptr.prototype.create = function(dt) {
 		var game;
 		game = this;
@@ -7768,7 +7530,7 @@ go$packages["github.com/ajhager/enj"] = (function() {
 			RequestAnimationFrame((_recv = game, function(time) { return _recv.animate(time); }));
 		}));
 	};
-	Game.prototype.animate = function(time) { return this.go$val.animate(time); };
+	Game.prototype.create = function(dt) { return this.go$val.create(dt); };
 	Game.Ptr.prototype.animate = function(time) {
 		var game, time$1, _recv;
 		game = this;
@@ -7784,19 +7546,19 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		game.Canvas.Context.Clear(16384);
 		game.responder.Draw();
 	};
-	Game.prototype.Fps = function() { return this.go$val.Fps(); };
+	Game.prototype.animate = function(time) { return this.go$val.animate(time); };
 	Game.Ptr.prototype.Fps = function() {
 		var game;
 		game = this;
 		return game.fps;
 	};
-	Game.prototype.SetBgColor = function(r, g, b, a) { return this.go$val.SetBgColor(r, g, b, a); };
+	Game.prototype.Fps = function() { return this.go$val.Fps(); };
 	Game.Ptr.prototype.SetBgColor = function(r, g, b, a) {
 		var game;
 		game = this;
 		game.Canvas.Context.ClearColor(r / 255, g / 255, b / 255, a / 255);
 	};
-	Game.prototype.NewTexture = function(path, mipmaps) { return this.go$val.NewTexture(path, mipmaps); };
+	Game.prototype.SetBgColor = function(r, g, b, a) { return this.go$val.SetBgColor(r, g, b, a); };
 	Game.Ptr.prototype.NewTexture = function(path, mipmaps) {
 		var game, ok, _tuple, _entry, image, texture;
 		game = this;
@@ -7806,18 +7568,19 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		}
 		return (go$ptrType(Texture)).nil;
 	};
-	Game.prototype.NewShader = function(vertSrc, fragSrc) { return this.go$val.NewShader(vertSrc, fragSrc); };
+	Game.prototype.NewTexture = function(path, mipmaps) { return this.go$val.NewTexture(path, mipmaps); };
 	Game.Ptr.prototype.NewShader = function(vertSrc, fragSrc) {
 		var game;
 		game = this;
 		return NewShader(game.Canvas, vertSrc, fragSrc);
 	};
-	Game.prototype.NewBatch = function() { return this.go$val.NewBatch(); };
+	Game.prototype.NewShader = function(vertSrc, fragSrc) { return this.go$val.NewShader(vertSrc, fragSrc); };
 	Game.Ptr.prototype.NewBatch = function() {
 		var game;
 		game = this;
 		return NewBatch(game.Canvas);
 	};
+	Game.prototype.NewBatch = function() { return this.go$val.NewBatch(); };
 	var rafPolyfill = function() {
 		var window, vendors, i, _slice, _index, vendor, lastTime;
 		window = go$global.window;
@@ -7896,25 +7659,24 @@ go$packages["github.com/ajhager/enj"] = (function() {
 			go$callDeferred(go$deferred);
 		}
 	};
-	Shader.prototype.Bind = function() { return this.go$val.Bind(); };
 	Shader.Ptr.prototype.Bind = function() {
 		var s;
 		s = this;
 		s.gl.Context.UseProgram(s.Object);
 	};
-	Shader.prototype.GetUniform = function(uniform) { return this.go$val.GetUniform(uniform); };
+	Shader.prototype.Bind = function() { return this.go$val.Bind(); };
 	Shader.Ptr.prototype.GetUniform = function(uniform) {
 		var s;
 		s = this;
 		return s.gl.Context.GetUniformLocation(s.Object, uniform);
 	};
-	Shader.prototype.GetAttrib = function(attrib) { return this.go$val.GetAttrib(attrib); };
+	Shader.prototype.GetUniform = function(uniform) { return this.go$val.GetUniform(uniform); };
 	Shader.Ptr.prototype.GetAttrib = function(attrib) {
 		var s;
 		s = this;
 		return s.gl.Context.GetAttribLocation(s.Object, attrib);
 	};
-	Region.prototype.Flip = function(x, y) { return this.go$val.Flip(x, y); };
+	Shader.prototype.GetAttrib = function(attrib) { return this.go$val.GetAttrib(attrib); };
 	Region.Ptr.prototype.Flip = function(x, y) {
 		var r, tmp, tmp$1;
 		r = this;
@@ -7929,25 +7691,25 @@ go$packages["github.com/ajhager/enj"] = (function() {
 			r.v2 = tmp$1;
 		}
 	};
-	Region.prototype.Width = function() { return this.go$val.Width(); };
+	Region.prototype.Flip = function(x, y) { return this.go$val.Flip(x, y); };
 	Region.Ptr.prototype.Width = function() {
 		var r;
 		r = this;
 		return r.width;
 	};
-	Region.prototype.Height = function() { return this.go$val.Height(); };
+	Region.prototype.Width = function() { return this.go$val.Width(); };
 	Region.Ptr.prototype.Height = function() {
 		var r;
 		r = this;
 		return r.height;
 	};
+	Region.prototype.Height = function() { return this.go$val.Height(); };
 	var NewTexture = function(gl, image, mipmaps) {
 		var texture;
 		texture = new Texture.Ptr(gl, null, image, 9729, 9729, 33071, 33071, mipmaps);
 		texture.Create();
 		return texture;
 	};
-	Texture.prototype.Create = function() { return this.go$val.Create(); };
 	Texture.Ptr.prototype.Create = function() {
 		var t;
 		t = this;
@@ -7963,31 +7725,31 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		t.gl.Context.TexImage2D(3553, 0, 6408, 6408, 5121, t.img);
 		t.gl.Context.BindTexture(3553, null);
 	};
-	Texture.prototype.Bind = function() { return this.go$val.Bind(); };
+	Texture.prototype.Create = function() { return this.go$val.Create(); };
 	Texture.Ptr.prototype.Bind = function() {
 		var t;
 		t = this;
 		t.gl.Context.BindTexture(3553, t.tex);
 	};
-	Texture.prototype.Unbind = function() { return this.go$val.Unbind(); };
+	Texture.prototype.Bind = function() { return this.go$val.Bind(); };
 	Texture.Ptr.prototype.Unbind = function() {
 		var t;
 		t = this;
 		t.gl.Context.BindTexture(3553, null);
 	};
-	Texture.prototype.Width = function() { return this.go$val.Width(); };
+	Texture.prototype.Unbind = function() { return this.go$val.Unbind(); };
 	Texture.Ptr.prototype.Width = function() {
 		var t;
 		t = this;
 		return (go$parseInt(t.img.width) >> 0);
 	};
-	Texture.prototype.Height = function() { return this.go$val.Height(); };
+	Texture.prototype.Width = function() { return this.go$val.Width(); };
 	Texture.Ptr.prototype.Height = function() {
 		var t;
 		t = this;
 		return (go$parseInt(t.img.height) >> 0);
 	};
-	Texture.prototype.SetFilter = function(min, max) { return this.go$val.SetFilter(min, max); };
+	Texture.prototype.Height = function() { return this.go$val.Height(); };
 	Texture.Ptr.prototype.SetFilter = function(min, max) {
 		var t;
 		t = this;
@@ -7998,13 +7760,13 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		t.gl.Context.TexParameteri(3553, 10240, max);
 		t.Unbind();
 	};
-	Texture.prototype.Filter = function() { return this.go$val.Filter(); };
+	Texture.prototype.SetFilter = function(min, max) { return this.go$val.SetFilter(min, max); };
 	Texture.Ptr.prototype.Filter = function() {
 		var t;
 		t = this;
 		return [t.minFilter, t.maxFilter];
 	};
-	Texture.prototype.SetWrap = function(u, v) { return this.go$val.SetWrap(u, v); };
+	Texture.prototype.Filter = function() { return this.go$val.Filter(); };
 	Texture.Ptr.prototype.SetWrap = function(u, v) {
 		var t;
 		t = this;
@@ -8015,13 +7777,13 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		t.gl.Context.TexParameteri(3553, 10243, v);
 		t.Unbind();
 	};
-	Texture.prototype.Wrap = function() { return this.go$val.Wrap(); };
+	Texture.prototype.SetWrap = function(u, v) { return this.go$val.SetWrap(u, v); };
 	Texture.Ptr.prototype.Wrap = function() {
 		var t;
 		t = this;
 		return [t.uWrap, t.vWrap];
 	};
-	Texture.prototype.Region = function(x, y, w, h) { return this.go$val.Region(x, y, w, h); };
+	Texture.prototype.Wrap = function() { return this.go$val.Wrap(); };
 	Texture.Ptr.prototype.Region = function(x, y, w, h) {
 		var t, invTexWidth, invTexHeight, u, v, u2, v2, width, height;
 		t = this;
@@ -8035,7 +7797,7 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		height = math.Abs(h);
 		return new Region.Ptr(t, u, v, u2, v2, width, height);
 	};
-	Texture.prototype.Split = function(w, h) { return this.go$val.Split(w, h); };
+	Texture.prototype.Region = function(x, y, w, h) { return this.go$val.Region(x, y, w, h); };
 	Texture.Ptr.prototype.Split = function(w, h) {
 		var t, x, y, width, height, _q, rows, _q$1, cols, startX, tiles, row, col;
 		t = this;
@@ -8061,6 +7823,7 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		}
 		return tiles;
 	};
+	Texture.prototype.Split = function(w, h) { return this.go$val.Split(w, h); };
 	var size = 10000;
 	var degToRad = 0.017453292519943295;
 	go$pkg.MOUSEMOVE = 0;
@@ -8086,45 +7849,44 @@ go$packages["github.com/ajhager/enj"] = (function() {
 		i8 = new go$global.Int8Array(4);
 		i32 = new go$global.Int32Array(i8.buffer, 0, 1);
 		f32 = new go$global.Float32Array(i8.buffer, 0, 1);
-		batchVert = " \nattribute vec4 in_Position;\nattribute vec4 in_Color;\nattribute vec2 in_TexCoords;\n\n//uniform mat4 uf_Matrix;\nuniform vec2 uf_Projection;\n\nvarying vec4 var_Color;\nvarying vec2 var_TexCoords;\n\nvoid main() {\n  var_Color = in_Color;\n  var_TexCoords = in_TexCoords;\n  gl_Position = vec4(in_Position.x / uf_Projection.x - 1.0,\n                     in_Position.y / -uf_Projection.y + 1.0,\n                     0.0, 1.0);\n}\n";
+		batchVert = " \nattribute vec4 in_Position;\nattribute vec4 in_Color;\nattribute vec2 in_TexCoords;\n\nuniform vec2 uf_Projection;\n\nvarying vec4 var_Color;\nvarying vec2 var_TexCoords;\n\nvoid main() {\n  var_Color = in_Color;\n  var_TexCoords = in_TexCoords;\n  gl_Position = vec4(in_Position.x / uf_Projection.x - 1.0,\n                     in_Position.y / -uf_Projection.y + 1.0,\n                     0.0, 1.0);\n}\n";
 		batchFrag = "\nprecision lowp float;\n\nvarying vec4 var_Color;\nvarying vec2 var_TexCoords;\n\nuniform sampler2D uf_Texture;\n\nvoid main (void) {\n  gl_FragColor = var_Color * texture2D (uf_Texture, var_TexCoords);\n}\n";
 		rafPolyfill();
 	};
   return go$pkg;
 })();
-go$packages["/Users/ajhager/go/src/github.com/ajhager/enj/demos/basics"] = (function() {
+go$packages["/Users/ajhager/go/src/github.com/ajhager/enj-examples/basics"] = (function() {
   var go$pkg = {};
 	var enj = go$packages["github.com/ajhager/enj"];
 	var webgl = go$packages["github.com/ajhager/webgl"];
 	var math = go$packages["math"];
 	var Basics;
-	Basics = go$newType(4, "Int", "main.Basics", "Basics", "/Users/ajhager/go/src/github.com/ajhager/enj/demos/basics", null);
+	Basics = go$newType(4, "Int", "main.Basics", "Basics", "/Users/ajhager/go/src/github.com/ajhager/enj-examples/basics", null);
 	go$pkg.Basics = Basics;
 	(go$ptrType(Basics)).methods = [["Draw", "", [], [], false], ["Key", "", [Go$Int, Go$Int], [], false], ["Load", "", [], [], false], ["Mouse", "", [Go$Float32, Go$Float32, Go$Int], [], false], ["Setup", "", [], [], false], ["Update", "", [Go$Float32], [], false]];
-	Basics.prototype.Load = function() { var obj = this.go$val; return (new (go$ptrType(Basics))(function() { return obj; }, null)).Load(); };
 	go$ptrType(Basics).prototype.Load = function() {
 		var b;
 		b = this;
-		game.Load.Image("bot.png");
+		game.Load.Image("../data/bot.png");
 	};
-	Basics.prototype.Setup = function() { var obj = this.go$val; return (new (go$ptrType(Basics))(function() { return obj; }, null)).Setup(); };
+	Basics.prototype.Load = function() { var obj = this.go$val; return (new (go$ptrType(Basics))(function() { return obj; }, null)).Load(); };
 	go$ptrType(Basics).prototype.Setup = function() {
 		var b, texture;
 		b = this;
-		texture = game.NewTexture("bot.png", false);
+		texture = game.NewTexture("../data/bot.png", false);
 		texture.SetFilter(9728, 9728);
 		regions = texture.Split(32, 32);
 		batch = game.NewBatch();
 		down = 50;
-		game.SetBgColor(30, 60, 90, 255);
+		game.SetBgColor(50, 80, 110, 255);
 	};
-	Basics.prototype.Update = function(dt) { var obj = this.go$val; return (new (go$ptrType(Basics))(function() { return obj; }, null)).Update(dt); };
+	Basics.prototype.Setup = function() { var obj = this.go$val; return (new (go$ptrType(Basics))(function() { return obj; }, null)).Setup(); };
 	go$ptrType(Basics).prototype.Update = function(dt) {
 		var b;
 		b = this;
 		time = time + (dt * 200);
 	};
-	Basics.prototype.Draw = function() { var obj = this.go$val; return (new (go$ptrType(Basics))(function() { return obj; }, null)).Draw(); };
+	Basics.prototype.Update = function(dt) { var obj = this.go$val; return (new (go$ptrType(Basics))(function() { return obj; }, null)).Update(dt); };
 	go$ptrType(Basics).prototype.Draw = function() {
 		var b, _slice, _index, _slice$1, _index$1;
 		b = this;
@@ -8133,7 +7895,7 @@ go$packages["/Users/ajhager/go/src/github.com/ajhager/enj/demos/basics"] = (func
 		batch.Draw((_slice$1 = regions, _index$1 = (4 + ((math.Mod(time, 6) >> 0) >> 0) >> 0), (_index$1 >= 0 && _index$1 < _slice$1.length) ? _slice$1.array[_slice$1.offset + _index$1] : go$throwRuntimeError("index out of range")), mx - 16 - down, my - 16, down + 16, 16, down / 50, down / 50, time / 2 + 90);
 		batch.End();
 	};
-	Basics.prototype.Mouse = function(x, y, e) { var obj = this.go$val; return (new (go$ptrType(Basics))(function() { return obj; }, null)).Mouse(x, y, e); };
+	Basics.prototype.Draw = function() { var obj = this.go$val; return (new (go$ptrType(Basics))(function() { return obj; }, null)).Draw(); };
 	go$ptrType(Basics).prototype.Mouse = function(x, y, e) {
 		var b, _ref;
 		b = this;
@@ -8147,14 +7909,15 @@ go$packages["/Users/ajhager/go/src/github.com/ajhager/enj/demos/basics"] = (func
 			down = 50;
 		}
 	};
-	Basics.prototype.Key = function(key, e) { var obj = this.go$val; return (new (go$ptrType(Basics))(function() { return obj; }, null)).Key(key, e); };
+	Basics.prototype.Mouse = function(x, y, e) { var obj = this.go$val; return (new (go$ptrType(Basics))(function() { return obj; }, null)).Mouse(x, y, e); };
 	go$ptrType(Basics).prototype.Key = function(key, e) {
 		var b;
 		b = this;
 		console.log(key);
 	};
+	Basics.prototype.Key = function(key, e) { var obj = this.go$val; return (new (go$ptrType(Basics))(function() { return obj; }, null)).Key(key, e); };
 	var main = function() {
-		game = enj.NewGame(960, 640, false, "example", go$newDataPointer(0, (go$ptrType(Basics))));
+		game = enj.NewGame(800, 600, false, "example", go$newDataPointer(0, (go$ptrType(Basics))));
 	};
 	var game = (go$ptrType(enj.Game)).nil;
 	var time = 0;
@@ -8173,12 +7936,12 @@ go$packages["runtime"].Error.implementedBy = [go$packages["runtime"].TypeAsserti
 go$packages["runtime"].stringer.implementedBy = [go$packages["github.com/ajhager/enj"].Canvas, go$packages["github.com/ajhager/enj"].Canvas.Ptr, go$packages["github.com/ajhager/enj"].Game, go$packages["github.com/ajhager/enj"].Game.Ptr, go$packages["github.com/ajhager/enj"].Shader, go$packages["github.com/ajhager/enj"].Shader.Ptr, go$packages["github.com/ajhager/webgl"].Context, go$packages["github.com/ajhager/webgl"].Context.Ptr];
 go$packages["github.com/neelance/gopherjs/js"].Object.implementedBy = [go$packages["github.com/ajhager/enj"].Canvas, go$packages["github.com/ajhager/enj"].Canvas.Ptr, go$packages["github.com/ajhager/enj"].Game, go$packages["github.com/ajhager/enj"].Game.Ptr, go$packages["github.com/ajhager/enj"].Shader, go$packages["github.com/ajhager/enj"].Shader.Ptr, go$packages["github.com/ajhager/webgl"].Context, go$packages["github.com/ajhager/webgl"].Context.Ptr];
 go$packages["github.com/ajhager/enj"].Managed.implementedBy = [go$packages["github.com/ajhager/enj"].Texture.Ptr];
-go$packages["github.com/ajhager/enj"].Responder.implementedBy = [go$ptrType(go$packages["/Users/ajhager/go/src/github.com/ajhager/enj/demos/basics"].Basics)];
+go$packages["github.com/ajhager/enj"].Responder.implementedBy = [go$ptrType(go$packages["/Users/ajhager/go/src/github.com/ajhager/enj-examples/basics"].Basics)];
 go$packages["runtime"].init();
 go$packages["errors"].init();
 go$packages["github.com/neelance/gopherjs/js"].init();
 go$packages["github.com/ajhager/webgl"].init();
 go$packages["math"].init();
 go$packages["github.com/ajhager/enj"].init();
-go$packages["/Users/ajhager/go/src/github.com/ajhager/enj/demos/basics"].init();
-go$packages["/Users/ajhager/go/src/github.com/ajhager/enj/demos/basics"].main();
+go$packages["/Users/ajhager/go/src/github.com/ajhager/enj-examples/basics"].init();
+go$packages["/Users/ajhager/go/src/github.com/ajhager/enj-examples/basics"].main();

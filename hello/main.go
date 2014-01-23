@@ -39,5 +39,5 @@ func (h *Hello) Key(key int, action int) {
 }
 
 func main() {
-	game = enj.NewGame(960, 640, false, "hello", &Hello{30, 60, 90})
+	game = enj.NewGame(800, 600, false, "example", &Hello{50, 80, 110})
 }

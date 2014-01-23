@@ -18,16 +18,16 @@ var (
 type Basics int
 
 func (b *Basics) Load() {
-	game.Load.Image("bot.png")
+	game.Load.Image("../data/bot.png")
 }
 
 func (b *Basics) Setup() {
-	texture := game.NewTexture("bot.png", false)
+	texture := game.NewTexture("../data/bot.png", false)
 	texture.SetFilter(webgl.NEAREST, webgl.NEAREST)
 	regions = texture.Split(32, 32)
 	batch = game.NewBatch()
 	down = 50
-	game.SetBgColor(30, 60, 90, 255)
+	game.SetBgColor(50, 80, 110, 255)
 }
 
 func (b *Basics) Update(dt float32) {
@@ -58,5 +58,5 @@ func (b *Basics) Key(key int, e int) {
 }
 
 func main() {
-	game = enj.NewGame(960, 640, false, "example", new(Basics))
+	game = enj.NewGame(800, 600, false, "example", new(Basics))
 }

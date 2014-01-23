@@ -8853,7 +8853,7 @@ go$packages["/Users/ajhager/go/src/github.com/ajhager/enj-examples/hello"] = (fu
 	};
 	Hello.prototype.Key = function(key, action) { return this.go$val.Key(key, action); };
 	var main = function() {
-		game = enj.NewGame(960, 640, false, "hello", new Hello.Ptr(30, 60, 90));
+		game = enj.NewGame(800, 600, false, "example", new Hello.Ptr(50, 80, 110));
 	};
 	var game = (go$ptrType(enj.Game)).nil;
 	go$pkg.main = main;

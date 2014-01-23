@@ -42,12 +42,12 @@ type Sprite struct {
 type Botmark int
 
 func (b *Botmark) Load() {
-	game.Load.Image("bot.png")
+	game.Load.Image("../data/bot.png")
 }
 
 func (b *Botmark) Setup() {
 	batch = game.NewBatch()
-	region = game.NewTexture("bot.png", false).Region(0, 0, 32, 32)
+	region = game.NewTexture("../data/bot.png", false).Region(0, 0, 32, 32)
 }
 
 func (b *Botmark) Update(dt float32) {

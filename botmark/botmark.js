@@ -8800,13 +8800,13 @@ go$packages["math/rand"] = (function() {
 	};
   return go$pkg;
 })();
-go$packages["/Users/ajhager/go/src/github.com/ajhager/enj/demos/botmark"] = (function() {
+go$packages["/Users/ajhager/go/src/github.com/ajhager/enj-examples/botmark"] = (function() {
   var go$pkg = {};
 	var enj = go$packages["github.com/ajhager/enj"];
 	var js = go$packages["github.com/neelance/gopherjs/js"];
 	var rand = go$packages["math/rand"];
 	var Sprite;
-	Sprite = go$newType(0, "Struct", "main.Sprite", "Sprite", "/Users/ajhager/go/src/github.com/ajhager/enj/demos/botmark", function(X_, Y_, DX_, DY_, Image_) {
+	Sprite = go$newType(0, "Struct", "main.Sprite", "Sprite", "/Users/ajhager/go/src/github.com/ajhager/enj-examples/botmark", function(X_, Y_, DX_, DY_, Image_) {
 		this.go$val = this;
 		this.X = X_ !== undefined ? X_ : 0;
 		this.Y = Y_ !== undefined ? Y_ : 0;
@@ -8816,21 +8816,21 @@ go$packages["/Users/ajhager/go/src/github.com/ajhager/enj/demos/botmark"] = (fun
 	});
 	go$pkg.Sprite = Sprite;
 	var Botmark;
-	Botmark = go$newType(4, "Int", "main.Botmark", "Botmark", "/Users/ajhager/go/src/github.com/ajhager/enj/demos/botmark", null);
+	Botmark = go$newType(4, "Int", "main.Botmark", "Botmark", "/Users/ajhager/go/src/github.com/ajhager/enj-examples/botmark", null);
 	go$pkg.Botmark = Botmark;
 	Sprite.init([["X", "", Go$Float32, ""], ["Y", "", Go$Float32, ""], ["DX", "", Go$Float32, ""], ["DY", "", Go$Float32, ""], ["Image", "", (go$ptrType(enj.Region)), ""]]);
 	(go$ptrType(Botmark)).methods = [["Draw", "", [], [], false], ["Key", "", [Go$Int, Go$Int], [], false], ["Load", "", [], [], false], ["Mouse", "", [Go$Float32, Go$Float32, Go$Int], [], false], ["Setup", "", [], [], false], ["Update", "", [Go$Float32], [], false]];
 	go$ptrType(Botmark).prototype.Load = function() {
 		var b;
 		b = this;
-		game.Load.Image("bot.png");
+		game.Load.Image("../data/bot.png");
 	};
 	Botmark.prototype.Load = function() { var obj = this.go$val; return (new (go$ptrType(Botmark))(function() { return obj; }, null)).Load(); };
 	go$ptrType(Botmark).prototype.Setup = function() {
 		var b;
 		b = this;
 		batch = game.NewBatch();
-		region = game.NewTexture("bot.png", false).Region(0, 0, 32, 32);
+		region = game.NewTexture("../data/bot.png", false).Region(0, 0, 32, 32);
 	};
 	Botmark.prototype.Setup = function() { var obj = this.go$val; return (new (go$ptrType(Botmark))(function() { return obj; }, null)).Setup(); };
 	go$ptrType(Botmark).prototype.Update = function(dt) {
@@ -8941,7 +8941,7 @@ go$packages["runtime"].Error.implementedBy = [go$packages["runtime"].TypeAsserti
 go$packages["runtime"].stringer.implementedBy = [go$packages["github.com/ajhager/enj"].Canvas, go$packages["github.com/ajhager/enj"].Canvas.Ptr, go$packages["github.com/ajhager/enj"].Game, go$packages["github.com/ajhager/enj"].Game.Ptr, go$packages["github.com/ajhager/enj"].Shader, go$packages["github.com/ajhager/enj"].Shader.Ptr, go$packages["github.com/ajhager/webgl"].Context, go$packages["github.com/ajhager/webgl"].Context.Ptr];
 go$packages["github.com/neelance/gopherjs/js"].Object.implementedBy = [go$packages["github.com/ajhager/enj"].Canvas, go$packages["github.com/ajhager/enj"].Canvas.Ptr, go$packages["github.com/ajhager/enj"].Game, go$packages["github.com/ajhager/enj"].Game.Ptr, go$packages["github.com/ajhager/enj"].Shader, go$packages["github.com/ajhager/enj"].Shader.Ptr, go$packages["github.com/ajhager/webgl"].Context, go$packages["github.com/ajhager/webgl"].Context.Ptr];
 go$packages["github.com/ajhager/enj"].Managed.implementedBy = [go$packages["github.com/ajhager/enj"].Texture.Ptr];
-go$packages["github.com/ajhager/enj"].Responder.implementedBy = [go$ptrType(go$packages["/Users/ajhager/go/src/github.com/ajhager/enj/demos/botmark"].Botmark)];
+go$packages["github.com/ajhager/enj"].Responder.implementedBy = [go$ptrType(go$packages["/Users/ajhager/go/src/github.com/ajhager/enj-examples/botmark"].Botmark)];
 go$packages["sync"].Locker.implementedBy = [go$packages["sync"].Mutex.Ptr, go$packages["sync"].RWMutex.Ptr, go$packages["sync"].rlocker.Ptr];
 go$packages["math/rand"].Source.implementedBy = [go$packages["math/rand"].Rand.Ptr, go$packages["math/rand"].lockedSource.Ptr, go$packages["math/rand"].rngSource.Ptr];
 go$packages["runtime"].init();
@@ -8953,5 +8953,5 @@ go$packages["github.com/ajhager/enj"].init();
 go$packages["sync/atomic"].init();
 go$packages["sync"].init();
 go$packages["math/rand"].init();
-go$packages["/Users/ajhager/go/src/github.com/ajhager/enj/demos/botmark"].init();
-go$packages["/Users/ajhager/go/src/github.com/ajhager/enj/demos/botmark"].main();
+go$packages["/Users/ajhager/go/src/github.com/ajhager/enj-examples/botmark"].init();
+go$packages["/Users/ajhager/go/src/github.com/ajhager/enj-examples/botmark"].main();
