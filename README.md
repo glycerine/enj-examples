@@ -40,7 +40,7 @@ type Hello struct {
   Red, Green, Blue byte
 }
 
-func (h *hello) Load() {
+func (h *Hello) Load() {
 }
 
 func (h *Hello) Setup() {
