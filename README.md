@@ -12,9 +12,7 @@ Inside the 'hello' folder you will first need to create an index.html file in or
 <!DOCTYPE HTML>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Basics</title>
+    <title>Hello Enj</title>
     <style>body { margin: 0; padding: 0; background-color: #222222; }</style>
   </head>
   <body>
