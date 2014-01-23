@@ -1,6 +1,6 @@
 # Enj Examples
 
-You can checkout the examples in this project to get a feel for how to use the enj game library, but to start your own project from scratch, you will need to setup a few things first.
+You can checkout the examples in this project to get a feel for how to use the [enj](https://github.com/ajhager/enj) game library, but to start your own project from scratch, you will need to setup a few things first.
 
 ## Manual Setup
 
