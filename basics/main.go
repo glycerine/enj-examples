@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/ajhager/enj"
-	"github.com/ajhager/webgl"
 	"math"
 )
 
@@ -25,7 +24,7 @@ func (b *Basics) Load() {
 
 func (b *Basics) Setup() {
 	texture := app.NewTexture("../data/bot.png", false)
-	texture.SetFilter(webgl.NEAREST, webgl.NEAREST)
+	texture.SetFilter(app.GL.NEAREST, app.GL.NEAREST)
 	regions = texture.Split(32, 32)
 	batch = app.NewBatch()
 	down = 50
