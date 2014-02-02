@@ -43,10 +43,11 @@ func (b *Basics) Draw() {
 }
 
 func (b *Basics) Mouse(x, y float32, e int) {
+	mx = x
+	my = y
+
 	switch e {
 	case enj.MOUSEMOVE:
-		mx = x
-		my = y
 	case enj.MOUSEDOWN:
 		down = 100
 	case enj.MOUSEUP:
