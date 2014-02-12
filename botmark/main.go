@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/ajhager/enj"
-	"github.com/neelance/gopherjs/js"
+	"github.com/gopherjs/gopherjs/js"
 	"math/rand"
 )
 
