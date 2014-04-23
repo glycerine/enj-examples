@@ -18,18 +18,18 @@ var (
 )
 
 func init() {
-	Stats := js.Global("Stats")
+	Stats := js.Global.Get("Stats")
 	if !Stats.IsUndefined() {
 		stats = Stats.New()
 		stats.Call("setMode", 0)
 		element := stats.Get("domElement")
 		element.Get("style").Set("position", "absolute")
-		js.Global("document").Call("getElementById", "example").Call("appendChild", element)
+		js.Global.Get("document").Call("getElementById", "example").Call("appendChild", element)
 	}
 
-	counter = js.Global("document").Call("createElement", "div")
+	counter = js.Global.Get("document").Call("createElement", "div")
 	counter.Set("id", "counter")
-	js.Global("document").Call("getElementById", "example").Call("appendChild", counter)
+	js.Global.Get("document").Call("getElementById", "example").Call("appendChild", counter)
 	counter.Set("innerHTML", "TOUCH!")
 }
 
